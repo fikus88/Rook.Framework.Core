@@ -8,9 +8,9 @@ script:
   - MONTH=$(date +'%m')
   - DAY=$(date +'%d')
   - dotnet build -c Release /p:Version="${YEAR}"."${MONTH}"."${DAY}"."${TRAVIS_BUILD_NUMBER}"
-  - dotnet pack Rook.MicroService.Core/Rook.MicroService.Core.csproj -c Release /p:Version="${YEAR}"."${MONTH}"."${DAY}"."${TRAVIS_BUILD_NUMBER}"
-  - dotnet test Rook.MicroService.Core.Tests.Unit/Rook.MicroService.Core.Tests.Unit.csproj
-  - export NUGET_FILE=$(ls Rook.MicroService.Core/bin/Release/*.nupkg)
+  - dotnet pack Rook.Framework.Core/Rook.Framework.Core.csproj -c Release /p:Version="${YEAR}"."${MONTH}"."${DAY}"."${TRAVIS_BUILD_NUMBER}"
+  - dotnet test Rook.Framework.Core.Tests.Unit/Rook.Framework.Core.Tests.Unit.csproj
+  - export NUGET_FILE=$(ls Rook.Framework.Core/bin/Release/*.nupkg)
   - dotnet nuget push "${NUGET_FILE}" -k "${NUGET_KEY}" -s https://www.nuget.org/
 
 global:

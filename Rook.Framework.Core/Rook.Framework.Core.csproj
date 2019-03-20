@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <DisableImplicitAssetTargetFallback>true</DisableImplicitAssetTargetFallback>
-    <Authors>Rook contributors</Authors>
+    <Authors>Rook Contributors</Authors>
     <Company>Rook Framework</Company>
     <Description>.Net Standard Core Code for a Microservice</Description>
     <Configurations>Debug;Release;Experimental</Configurations>
@@ -10,11 +10,11 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>Rook.MicroService.Core.xml</DocumentationFile>
+    <DocumentationFile>Rook.Framework.Core.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard1.6\Microlise.MicroService.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard1.6\Rook.Framework.Core.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <LangVersion>7.3</LangVersion>
