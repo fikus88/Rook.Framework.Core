@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+	  <DisableImplicitAssetTargetFallback>true</DisableImplicitAssetTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microlise.MicroService.Core" Version="1.0.0-ci-20170925-125209" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MessageHandlers\" />
+  </ItemGroup>
+
+</Project>

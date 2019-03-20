@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <LangVersion>7.2</LangVersion>
+    <Configurations>Debug;Release;Experimental</Configurations>
+    <Platforms>AnyCPU</Platforms>
+    <RootNamespace>Microlise.MicroService.Core.Tests.Unit</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.msbuild" Version="2.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="Moq" Version="4.8.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.3.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.3.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DummyTestProject1\DummyMicroserviceCoreApi.csproj" />
+    <ProjectReference Include="..\Rook.Framework.Core\Rook.Framework.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="BigJsonExample.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MongoDB.Bson, Version=2.6.1.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\.nuget\packages\mongodb.bson\2.6.1\lib\netstandard1.5\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=5.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce">
+      <HintPath>..\..\.nuget\packages\rabbitmq.client\5.1.0\lib\netstandard1.5\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

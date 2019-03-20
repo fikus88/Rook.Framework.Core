@@ -1,0 +1,6 @@
+{
+  "QueueUri": "amqp://guest:guest@localhost:5672",
+  "MongoDatabaseUri": "mongodb://localhost:27017",
+  "MongoDatabaseName": "unittests",
+  "LogLevel": "Trace"
+}

@@ -1,0 +1,10 @@
+{
+  "QueueUri": "amqp://guest:guest@queue:5672",
+  "MongoDatabaseUri": "mongodb://localhost:27017",
+  "MongoDatabaseName": "exampleservice",
+  "LogLevel": "Trace",
+  "Port": 81,
+  "UseStructureMap": true,
+  "AnalyticsPumpTopic": "AnalyticsPumpTest",
+  "KafkaServerUri": "http://192.168.120.135:9092"
+}
