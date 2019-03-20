@@ -9,13 +9,10 @@ script:
   - DAY=$(date +'%d')
   - dotnet build -c Release /p:Version="${YEAR}"."${MONTH}"."${DAY}"."${TRAVIS_BUILD_NUMBER}"
   - dotnet pack Rook.MicroService.Core/Rook.MicroService.Core.csproj -c Release /p:Version="${YEAR}"."${MONTH}"."${DAY}"."${TRAVIS_BUILD_NUMBER}"
-  - dotnet pack Rook.MicroService.Core.LegacyIocContainer/Rook.MicroService.Core.LegacyIocContainer.csproj -c Release /p:Version="${YEAR}"."${MONTH}"."${DAY}"."${TRAVIS_BUILD_NUMBER}"
   - dotnet test Rook.MicroService.Core.Tests.Unit/Rook.MicroService.Core.Tests.Unit.csproj
-  - dotnet test Rook.MicroService.Core.LegacyIocContainer.Tests.Unit/Rook.MicroService.Core.LegacyIocContainer.Tests.Unit.csproj
   - export NUGET_FILE=$(ls Rook.MicroService.Core/bin/Release/*.nupkg)
   - dotnet nuget push "${NUGET_FILE}" -k "${NUGET_KEY}" -s https://www.nuget.org/
-  - export NUGET_FILE2=$(ls Rook.MicroService.Core.LegacyIocContainer/bin/Release/*.nupkg)
-  - dotnet nuget push "${NUGET_FILE2}" -k "${NUGET_KEY}" -s https://www.nuget.org/
+
 global:
   - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
   - DOTNET_CLI_TELEMETRY_OPTOUT=1
