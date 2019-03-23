@@ -4,10 +4,16 @@
     <DisableImplicitAssetTargetFallback>true</DisableImplicitAssetTargetFallback>
     <Authors>Rook Contributors</Authors>
     <Company>Rook Framework</Company>
-    <Description>.Net Standard Core Code for a Microservice</Description>
+    <Description>Core microservice functionality for rook services</Description>
     <Configurations>Debug;Release;Experimental</Configurations>
     <Platforms>AnyCPU</Platforms>
     <LangVersion>7.2</LangVersion>
+    <PackageVersion />
+    <Title>Rook.Framework.Core</Title>
+    <PackageLicenseUrl>https://github.com/rookframework/Rook.Framework.Core/blob/master/LICENSE     </PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/rookframework/Rook.Framework.Core</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>Rook.Framework.Core.xml</DocumentationFile>

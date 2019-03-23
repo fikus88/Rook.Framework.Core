@@ -20,7 +20,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFiles", "SolutionFiles", "{86052C02-FA44-4A14-B09C-FE23C8D47C6A}"
 ProjectSection(SolutionItems) = preProject
 	.travis.yml = .travis.yml
-	SetAssemblyVersion.ps1 = SetAssemblyVersion.ps1
 EndProjectSection
 EndProject
 Global
