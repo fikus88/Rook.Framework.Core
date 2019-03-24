@@ -14,6 +14,8 @@
     <RepositoryUrl>https://github.com/rookframework/Rook.Framework.Core</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/rookframework/Rook.Documentation</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/rookframework/Rook.Documentation/blob/master/rook.png?raw=true</PackageIconUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>Rook.Framework.Core.xml</DocumentationFile>
