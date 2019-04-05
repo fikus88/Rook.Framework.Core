@@ -7,7 +7,7 @@ namespace Rook.Framework.Core.Monitoring
 {
     internal sealed class ServiceMetrics : IServiceMetrics, IStartable
     {
-        internal const string MetricsPrefix = "microlise_service";
+        internal const string MetricsPrefix = "rook_service";
 
         private readonly IBuildInfoLabelCollector _buildInfoCollector;
         private readonly IContainerFacade _containerFacade;

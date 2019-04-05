@@ -6,11 +6,11 @@ namespace Rook.Framework.Core.Monitoring
 {
     /// <summary>
     /// Collects build info labels from <see cref="IBuildInfoLabelProvider"/> implementations
-    /// so they can be collated into th microlise_service_build_info metric.
+    /// so they can be collated into th rook_service_build_info metric.
     /// </summary>
     /// <remarks>
     /// Create an implementation of <see cref="IBuildInfoLabelProvider"/> to specify custom
-    /// labels and values for the microlise_service_build_info metric. If duplicates are 
+    /// labels and values for the rook_service_build_info metric. If duplicates are 
     /// found then <see cref="BuildInfoLabelCollector"/> will use the first one it finds,
     /// and will log out a warning with the duplicates.
     /// 
