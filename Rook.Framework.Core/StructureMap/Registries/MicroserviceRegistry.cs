@@ -76,10 +76,14 @@ namespace Rook.Framework.Core.StructureMap.Registries
             do
             {
                 var assembly = assembliesToScan.Pop();
-                
+
+                var test = assembly.GetReferencedAssemblies().ToList();
+
                 var referencedAssemblies = assembly.GetReferencedAssemblies()
                     .Where(x => !x.Name.Contains("StructureMap"))
                     .Where(x => !x.Name.Contains("VisualStudio"))
+                    .Where(x => !x.Name.Contains("Microsoft.AspNetCore"))
+                    .Where(x => !x.Name.Contains("Microsoft.Extensions"))
                     .Select(Assembly.Load)
                     .Where(a => !a.CodeBase.Contains(@"C:/Program Files/dotnet"))
                     .Where(a => a.GetTypes().Any(type => typeof(Registry).IsAssignableFrom(type)));
