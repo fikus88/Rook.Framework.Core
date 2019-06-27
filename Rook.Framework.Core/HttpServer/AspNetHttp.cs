@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,20 +17,20 @@ namespace Rook.Framework.Core.HttpServer
 	{
 		private readonly IConfigurationManager _configurationManager;
 		private readonly ILogger _logger;
-		private readonly IContainerFacade _container;
 		private readonly int port;
 		private readonly int requestTimeout;
+		private readonly CancellationTokenSource cts = new CancellationTokenSource();
+		private CancellationToken allocationCancellationToken;
 
 		public StartupPriority StartupPriority => StartupPriority.Lowest;
 		private IWebHost _webHost;
 
-		public AspNetHttp(IConfigurationManager configurationManager, ILogger logger, IContainerFacade container)
+		public AspNetHttp(IConfigurationManager configurationManager, ILogger logger)
 		{
 			_configurationManager = configurationManager;
 			_logger = logger;
-			_container = container;
 
-			const int defaultPort = -1;
+			const int defaultPort = 8000;
 			const int defaultRequestTimeout = 500;
 
 			port = configurationManager.Get("Port", defaultPort);
@@ -37,18 +39,25 @@ namespace Rook.Framework.Core.HttpServer
 
 		public void Start()
 		{
+			allocationCancellationToken = cts.Token;
+			Task.Run(CreateWebHost, allocationCancellationToken);
+		}
+
+		private void CreateWebHost()
+		{
 			_webHost = CreateWebHostBuilder().Build();
 			_webHost.Run();
 		}
 
-		public static IWebHostBuilder CreateWebHostBuilder()
+		public IWebHostBuilder CreateWebHostBuilder()
 		{
-			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls("http://localhost:8000");
+			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls($"http://localhost:{port}");
 		}
 
 		public void Stop()
 		{
-			_webHost.StopAsync();
+			cts.Cancel();
+			_webHost.StopAsync(allocationCancellationToken);
 		}
 	}
 
@@ -57,6 +66,7 @@ namespace Rook.Framework.Core.HttpServer
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -72,15 +82,15 @@ namespace Rook.Framework.Core.HttpServer
 
 			app.UseHttpsRedirection();
 
-			app.Use(async (context, next) =>
-			{
-				if (context.Request.Path == "/health")
-				{
-					await context.Response.WriteAsync("All clear");
-					return;
-				}
-				await next();
-			});
+			//app.Use(async (context, next) =>
+			//{
+			//	if (context.Request.Path == "/health")
+			//	{
+			//		await context.Response.WriteAsync("All clear");
+			//		return;
+			//	}
+			//	await next();
+			//});
 
 			app.UseMvc();
 		}

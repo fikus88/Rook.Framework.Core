@@ -13,11 +13,11 @@ namespace Rook.Framework.Core.StructureMap.Registries
     {
         public StartupRegistry()
         {
-            ForConcreteType<NanoHttp>().Configure.Singleton();
-            For<IStartable>().Singleton().Add(x => x.GetInstance<NanoHttp>());
-            For<IStartStoppable>().Singleton().Add(x => x.GetInstance<NanoHttp>());
+	        ForConcreteType<AspNetHttp>().Configure.Singleton();
+			For<IStartable>().Singleton().Add(x => x.GetInstance<AspNetHttp>());
+			For<IStartStoppable>().Singleton().Add(x => x.GetInstance<AspNetHttp>());
 
-            For<IStartable>().Add(x => x.GetInstance<ServiceMetrics>());
+			For<IStartable>().Add(x => x.GetInstance<ServiceMetrics>());
 
             For<IStartable>().Add(x => x.GetInstance<MessageSubscriber>());
             For<IStartStoppable>().Add(x => x.GetInstance<MessageSubscriber>());
