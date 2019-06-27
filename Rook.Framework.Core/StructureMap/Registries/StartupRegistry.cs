@@ -3,6 +3,7 @@ using Rook.Framework.Core.Application.Scaling;
 using Rook.Framework.Core.Application.Subscribe;
 using Rook.Framework.Core.Backplane;
 using Rook.Framework.Core.HttpServer;
+using Rook.Framework.Core.HttpServerAspNet;
 using Rook.Framework.Core.Monitoring;
 using Rook.Framework.Core.Services;
 using StructureMap;

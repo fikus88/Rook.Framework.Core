@@ -1,17 +1,11 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Rook.Framework.Core.Common;
 using Rook.Framework.Core.Services;
-using Rook.Framework.Core.StructureMap;
 
-namespace Rook.Framework.Core.HttpServer
+namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class AspNetHttp : IStartStoppable
 	{
@@ -49,7 +43,7 @@ namespace Rook.Framework.Core.HttpServer
 			_webHost.Run();
 		}
 
-		public IWebHostBuilder CreateWebHostBuilder()
+		private IWebHostBuilder CreateWebHostBuilder()
 		{
 			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls($"http://localhost:{port}");
 		}
@@ -58,41 +52,6 @@ namespace Rook.Framework.Core.HttpServer
 		{
 			cts.Cancel();
 			_webHost.StopAsync(allocationCancellationToken);
-		}
-	}
-
-	public class Startup
-	{
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-		}
-
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
-				app.UseHsts();
-			}
-
-			app.UseHttpsRedirection();
-
-			//app.Use(async (context, next) =>
-			//{
-			//	if (context.Request.Path == "/health")
-			//	{
-			//		await context.Response.WriteAsync("All clear");
-			//		return;
-			//	}
-			//	await next();
-			//});
-
-			app.UseMvc();
 		}
 	}
 }
