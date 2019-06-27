@@ -1,0 +1,5 @@
+{
+  "QueueUri": "amqp://guest:guest@queue:5672",
+  "LogLevel": "Info",
+  "UseStructureMap": true
+}
