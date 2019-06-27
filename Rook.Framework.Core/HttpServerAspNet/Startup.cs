@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +10,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	{
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+			services.AddMvc()
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+				.AddApplicationPart(Assembly.GetEntryAssembly());
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -25,16 +27,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			}
 
 			app.UseHttpsRedirection();
-
-			//app.Use(async (context, next) =>
-			//{
-			//	if (context.Request.Path == "/health")
-			//	{
-			//		await context.Response.WriteAsync("All clear");
-			//		return;
-			//	}
-			//	await next();
-			//});
 
 			app.UseMvc();
 		}
