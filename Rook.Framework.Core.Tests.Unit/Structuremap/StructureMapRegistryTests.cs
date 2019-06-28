@@ -8,6 +8,7 @@ using Rook.Framework.Core.Application.Scaling;
 using Rook.Framework.Core.Application.Subscribe;
 using Rook.Framework.Core.Backplane;
 using Rook.Framework.Core.HttpServer;
+using Rook.Framework.Core.HttpServerAspNet;
 using Rook.Framework.Core.Monitoring;
 using Rook.Framework.Core.Services;
 using Rook.Framework.Core.StructureMap.Registries;
@@ -69,7 +70,7 @@ namespace Rook.Framework.Core.Tests.Unit.Structuremap
             var isMessageSubscriberSingleton = startables.Any(s => s.GetHashCode() == container.GetInstance<IMessageSubscriber>().GetHashCode());
             var isRabbitBackplaneSingleton = startables.Any(s => s.GetHashCode() == container.GetInstance<IBackplane>().GetHashCode());
             var isScalingMessagePublisher = startables.Any(s => s.GetHashCode() == container.GetInstance<ScalingMessagePublisher>().GetHashCode());
-            var isNanoHttpSingleton = startables.Any(s => s.GetHashCode() == container.GetInstance<NanoHttp>().GetHashCode());
+            var isAspHttpSingleton = startables.Any(s => s.GetHashCode() == container.GetInstance<AspNetHttp>().GetHashCode());
             var containsNoDuplicates = startables.Select(x => x.GetType().Name).Distinct().Count() == startables.Count;
 
             Assert.IsTrue(isQueueWrapperSingleton);
@@ -77,7 +78,7 @@ namespace Rook.Framework.Core.Tests.Unit.Structuremap
             Assert.IsTrue(isMessageSubscriberSingleton);
             Assert.IsTrue(isRabbitBackplaneSingleton);
             Assert.IsTrue(isScalingMessagePublisher);
-            Assert.IsTrue(isNanoHttpSingleton);
+            Assert.IsTrue(isAspHttpSingleton);
             Assert.IsTrue(containsNoDuplicates);
         }
 
