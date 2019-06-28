@@ -10,9 +10,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	[ApiController]
 	public class TestServiceController : ControllerBase
 	{
-		public TestServiceController(IConfigurationManager config)
+		public TestServiceController()
 		{
-			
 		}
 
 		[HttpGet]

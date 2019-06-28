@@ -59,7 +59,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		private IWebHostBuilder CreateWebHostBuilder()
 		{
-			var url = $"http://127.0.0.1:{port}";
+			var url = $"http://test.localhost:{port}";
 			_logger.Info($"{nameof(AspNetHttp)}.{nameof(CreateWebHostBuilder)}", new LogItem("Event", "Running ASP.NET Web Host"), new LogItem("Port", 0));
 			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().ConfigureServices((services) => services.AddSingleton(_container)).UseUrls(url);
 		}
