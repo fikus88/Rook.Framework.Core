@@ -1,10 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Rook.Framework.Core.Common;
-using Rook.Framework.Core.HttpServer;
 using Rook.Framework.Core.Services;
+using StructureMap;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -12,6 +14,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	{
 		private readonly IConfigurationManager _configurationManager;
 		private readonly ILogger _logger;
+		private readonly IContainer _container;
 		private readonly int port;
 		private readonly int requestTimeout;
 		private readonly CancellationTokenSource cts = new CancellationTokenSource();
@@ -20,10 +23,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public StartupPriority StartupPriority => StartupPriority.Lowest;
 		private IWebHost _webHost;
 
-		public AspNetHttp(IConfigurationManager configurationManager, ILogger logger)
+		public AspNetHttp(IConfigurationManager configurationManager, ILogger logger, IContainer container)
 		{
 			_configurationManager = configurationManager;
 			_logger = logger;
+			_container = container;
 
 			const int defaultPort = 8000;
 			const int defaultRequestTimeout = 500;
@@ -50,7 +54,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		{
 			var url = $"http://localhost:{port}";
 			_logger.Info($"{nameof(AspNetHttp)}.{nameof(CreateWebHostBuilder)}", new LogItem("Event", "Running ASP.NET Web Host"), new LogItem("URL", url));
-			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls(url);
+			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().ConfigureServices((services) => services.AddSingleton(_container)).UseUrls(url);
 		}
 
 		public void Stop()

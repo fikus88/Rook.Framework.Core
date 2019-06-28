@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -6,6 +7,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	[ApiController]
 	public class TestServiceController : ControllerBase
 	{
+		public TestServiceController(IConfigurationManager config)
+		{
+			
+		}
+
 		[HttpGet]
 		public string GetHealthStatus()
 		{
