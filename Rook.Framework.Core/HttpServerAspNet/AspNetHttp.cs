@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Rook.Framework.Core.Common;
+using Rook.Framework.Core.HttpServer;
 using Rook.Framework.Core.Services;
 
 namespace Rook.Framework.Core.HttpServerAspNet
@@ -34,24 +35,30 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public void Start()
 		{
 			allocationCancellationToken = cts.Token;
+			
 			Task.Run(CreateWebHost, allocationCancellationToken);
 		}
 
 		private void CreateWebHost()
 		{
+			_logger.Info($"{nameof(NanoHttp)}.{nameof(Start)}", new LogItem("Event", "Building ASP.Net Web Host"));
 			_webHost = CreateWebHostBuilder().Build();
 			_webHost.Run();
 		}
 
 		private IWebHostBuilder CreateWebHostBuilder()
 		{
-			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls($"http://localhost:{port}");
+			var url = $"http://localhost:{port}";
+			_logger.Info($"{nameof(NanoHttp)}.{nameof(Start)}", new LogItem("Event", "Running ASP.Net Web Host"), new LogItem("URL", url));
+			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls(url);
 		}
 
 		public void Stop()
 		{
+			_logger.Info("Stopping ASP.Net Web Host");
 			cts.Cancel();
 			_webHost.StopAsync(allocationCancellationToken);
+			_logger.Info("ASP.Net Web Host Stopped");
 		}
 	}
 }
