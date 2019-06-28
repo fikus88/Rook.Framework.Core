@@ -1,17 +1,12 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using Rook.Framework.Core.Common;
+using Rook.Framework.Core.HttpServer;
 using Rook.Framework.Core.Services;
-using Rook.Framework.Core.StructureMap;
 
-namespace Rook.Framework.Core.HttpServer
+namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class AspNetHttp : IStartStoppable
 	{
@@ -40,59 +35,30 @@ namespace Rook.Framework.Core.HttpServer
 		public void Start()
 		{
 			allocationCancellationToken = cts.Token;
+			
 			Task.Run(CreateWebHost, allocationCancellationToken);
 		}
 
 		private void CreateWebHost()
 		{
+			_logger.Info($"{nameof(NanoHttp)}.{nameof(Start)}", new LogItem("Event", "Building ASP.Net Web Host"));
 			_webHost = CreateWebHostBuilder().Build();
 			_webHost.Run();
 		}
 
-		public IWebHostBuilder CreateWebHostBuilder()
+		private IWebHostBuilder CreateWebHostBuilder()
 		{
-			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls($"http://localhost:{port}");
+			var url = $"http://localhost:{port}";
+			_logger.Info($"{nameof(NanoHttp)}.{nameof(Start)}", new LogItem("Event", "Running ASP.Net Web Host"), new LogItem("URL", url));
+			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls(url);
 		}
 
 		public void Stop()
 		{
+			_logger.Info("Stopping ASP.Net Web Host");
 			cts.Cancel();
 			_webHost.StopAsync(allocationCancellationToken);
-		}
-	}
-
-	public class Startup
-	{
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-		}
-
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
-			{
-				app.UseHsts();
-			}
-
-			app.UseHttpsRedirection();
-
-			//app.Use(async (context, next) =>
-			//{
-			//	if (context.Request.Path == "/health")
-			//	{
-			//		await context.Response.WriteAsync("All clear");
-			//		return;
-			//	}
-			//	await next();
-			//});
-
-			app.UseMvc();
+			_logger.Info("ASP.Net Web Host Stopped");
 		}
 	}
 }
