@@ -2,5 +2,6 @@
 	"QueueUri": "amqp://guest:guest@queue:5672",
 	"LogLevel": "Info",
 	"UseStructureMap": true,
+	"Port": 80,
 	"AllowedCorsOrigins": "http://www.google.com,http://www.mab.org.uk"
 }

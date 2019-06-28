@@ -20,5 +20,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		{
 			return $"This is being returned from {nameof(TestServiceController)}";
 		}
+
+		[HttpPost]
+		public string PostTest()
+		{
+			return "PostTestSuccess";
+		}
 	}
 }
