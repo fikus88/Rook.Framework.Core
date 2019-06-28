@@ -15,7 +15,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		private readonly int port;
 		private readonly int requestTimeout;
 		private readonly CancellationTokenSource cts = new CancellationTokenSource();
-		private CancellationToken allocationCancellationToken;
+		private CancellationToken _allocationCancellationToken;
 
 		public StartupPriority StartupPriority => StartupPriority.Lowest;
 		private IWebHost _webHost;
@@ -34,14 +34,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		public void Start()
 		{
-			allocationCancellationToken = cts.Token;
+			_allocationCancellationToken = cts.Token;
 			
-			Task.Run(CreateWebHost, allocationCancellationToken);
+			Task.Run(RunWebHost, _allocationCancellationToken);
 		}
 
-		private void CreateWebHost()
+		private void RunWebHost()
 		{
-			_logger.Info($"{nameof(NanoHttp)}.{nameof(Start)}", new LogItem("Event", "Building ASP.Net Web Host"));
+			_logger.Info($"{nameof(AspNetHttp)}.{nameof(RunWebHost)}", new LogItem("Event", "Building ASP.NET Web Host"));
 			_webHost = CreateWebHostBuilder().Build();
 			_webHost.Run();
 		}
@@ -49,16 +49,16 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		private IWebHostBuilder CreateWebHostBuilder()
 		{
 			var url = $"http://localhost:{port}";
-			_logger.Info($"{nameof(NanoHttp)}.{nameof(Start)}", new LogItem("Event", "Running ASP.Net Web Host"), new LogItem("URL", url));
+			_logger.Info($"{nameof(AspNetHttp)}.{nameof(CreateWebHostBuilder)}", new LogItem("Event", "Running ASP.NET Web Host"), new LogItem("URL", url));
 			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().UseUrls(url);
 		}
 
 		public void Stop()
 		{
-			_logger.Info("Stopping ASP.Net Web Host");
+			_logger.Info("Stopping ASP.NET Web Host");
 			cts.Cancel();
-			_webHost.StopAsync(allocationCancellationToken);
-			_logger.Info("ASP.Net Web Host Stopped");
+			_webHost.StopAsync(_allocationCancellationToken);
+			_logger.Info("ASP.NET Web Host Stopped");
 		}
 	}
 }
