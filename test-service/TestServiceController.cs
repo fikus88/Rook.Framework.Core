@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
+	[EnableCors("_sameDomainOrigin")]
 	[Route("[controller]")]
 	[ApiController]
 	public class TestServiceController : ControllerBase

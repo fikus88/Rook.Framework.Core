@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
@@ -14,11 +12,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class AspNetHttp : IStartStoppable
 	{
-		private readonly IConfigurationManager _configurationManager;
 		private readonly ILogger _logger;
 		private readonly IContainer _container;
 		private readonly int port;
-		private readonly int requestTimeout;
 		private readonly CancellationTokenSource cts = new CancellationTokenSource();
 		private CancellationToken _allocationCancellationToken;
 
@@ -27,15 +23,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		public AspNetHttp(IConfigurationManager configurationManager, ILogger logger, IContainer container)
 		{
-			_configurationManager = configurationManager;
 			_logger = logger;
 			_container = container;
 
 			const int defaultPort = 0;
-			const int defaultRequestTimeout = 500;
+			//const int defaultRequestTimeout = 500;
 
 			port = configurationManager.Get("Port", defaultPort);
-			requestTimeout = configurationManager.Get("RequestTimeout", defaultRequestTimeout);
+			//requestTimeout = configurationManager.Get("RequestTimeout", defaultRequestTimeout);
 		}
 
 		public void Start()

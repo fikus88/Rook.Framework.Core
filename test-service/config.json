@@ -1,5 +1,6 @@
 {
-  "QueueUri": "amqp://guest:guest@queue:5672",
-  "LogLevel": "Info",
-  "UseStructureMap": true
+	"QueueUri": "amqp://guest:guest@queue:5672",
+	"LogLevel": "Info",
+	"UseStructureMap": true,
+	"AllowedCorsOrigins": "http://www.google.com,http://www.mab.org.uk"
 }

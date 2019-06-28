@@ -7,12 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Rook.Framework.Core.Application.Bus;
+using Rook.Framework.Core.Common;
 using StructureMap;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class Startup
 	{
+		readonly string SameDomainOrigin = "_sameDomainOrigin";
+		string[] AllowedCorsOrigins;
+
 		public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
 			var sp = services.BuildServiceProvider();
@@ -24,7 +28,22 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 				.AddApplicationPart(Assembly.GetEntryAssembly());
 
-			return ConfigureIoC(services, container);;
+			var configurationManager = container.GetInstance<IConfigurationManager>();
+			AllowedCorsOrigins = configurationManager.Get<string>("AllowedCorsOrigins", null).Split(",");
+			if (AllowedCorsOrigins != null)
+			{
+				services.AddCors(options =>
+				{
+					options.AddPolicy(SameDomainOrigin,
+						builder =>
+						{
+							builder.WithOrigins(AllowedCorsOrigins);
+							builder.SetIsOriginAllowedToAllowWildcardSubdomains();
+						});
+				});
+			}
+
+			return ConfigureIoC(services, container);
 		}
 
 		public IServiceProvider ConfigureIoC(IServiceCollection services, IContainer container)
@@ -46,6 +65,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			else
 			{
 				app.UseHsts();
+			}
+
+			if (AllowedCorsOrigins != null)
+			{
+				app.UseCors(SameDomainOrigin);
 			}
 
 			app.UseHealthChecks("/health");
