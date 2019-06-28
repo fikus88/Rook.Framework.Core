@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
@@ -29,7 +31,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			_logger = logger;
 			_container = container;
 
-			const int defaultPort = 8000;
+			const int defaultPort = 0;
 			const int defaultRequestTimeout = 500;
 
 			port = configurationManager.Get("Port", defaultPort);
@@ -39,20 +41,30 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public void Start()
 		{
 			_allocationCancellationToken = cts.Token;
-			
 			Task.Run(RunWebHost, _allocationCancellationToken);
 		}
 
 		private void RunWebHost()
 		{
-			_logger.Info($"{nameof(AspNetHttp)}.{nameof(RunWebHost)}", new LogItem("Event", "Building ASP.NET Web Host"));
-			_webHost = CreateWebHostBuilder().Build();
-			_webHost.Run();
+			try
+			{
+				_logger.Info($"{nameof(AspNetHttp)}.{nameof(RunWebHost)}",
+					new LogItem("Event", "Building ASP.NET Web Host"));
+				_webHost = CreateWebHostBuilder().Build();
+				_webHost.Run();
+			}
+			catch (Exception e)
+			{
+				_logger.Fatal($"{nameof(AspNetHttp)}.{nameof(RunWebHost)}",
+					new LogItem("Event", "Unhandled exception"),
+					new LogItem("Exception", e.Message),
+					new LogItem("StackTrace", e.StackTrace));
+			}
 		}
 
 		private IWebHostBuilder CreateWebHostBuilder()
 		{
-			var url = $"http://localhost:{port}";
+			var url = $"http://127.0.0.1:{port}";
 			_logger.Info($"{nameof(AspNetHttp)}.{nameof(CreateWebHostBuilder)}", new LogItem("Event", "Running ASP.NET Web Host"), new LogItem("URL", url));
 			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().ConfigureServices((services) => services.AddSingleton(_container)).UseUrls(url);
 		}
