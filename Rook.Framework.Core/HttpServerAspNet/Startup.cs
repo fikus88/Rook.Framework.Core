@@ -10,6 +10,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	{
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddHealthChecks();
 			services.AddMvc()
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 				.AddApplicationPart(Assembly.GetEntryAssembly());
@@ -26,6 +27,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				app.UseHsts();
 			}
 
+			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
 
 			app.UseMvc();
