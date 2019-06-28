@@ -14,36 +14,41 @@ namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class Startup
 	{
-		readonly string SameDomainOrigin = "_sameDomainOrigin";
-		string[] AllowedCorsOrigins;
+        private const string AllowedCorsOriginsPolicy = "_allowedCorsOriginsPolicy";
+        string[] _allowedCorsOrigins;
 
-		public IServiceProvider ConfigureServices(IServiceCollection services)
+        private readonly IContainer _container;
+
+        public Startup(IContainer container)
+        {
+            _container = container;
+        }
+
+        public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
-			var sp = services.BuildServiceProvider();
-			var container = sp.GetRequiredService<IContainer>();
-
-			services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
+            services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
 
 			services.AddMvc()
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
 				.AddApplicationPart(Assembly.GetEntryAssembly());
 
-			var configurationManager = container.GetInstance<IConfigurationManager>();
-			AllowedCorsOrigins = configurationManager.Get<string>("AllowedCorsOrigins", null).Split(",");
-			if (AllowedCorsOrigins != null)
-			{
-				services.AddCors(options =>
+			var configurationManager = _container.GetInstance<IConfigurationManager>();
+            _allowedCorsOrigins = configurationManager.Get<string>("AllowedCorsOrigins", null).Split(",");
+
+			if (_allowedCorsOrigins != null)
+            { 
+                services.AddCors(options =>
 				{
-					options.AddPolicy(SameDomainOrigin,
+					options.AddPolicy(AllowedCorsOriginsPolicy,
 						builder =>
 						{
-							builder.WithOrigins(AllowedCorsOrigins);
+							builder.WithOrigins(_allowedCorsOrigins);
 							builder.SetIsOriginAllowedToAllowWildcardSubdomains();
 						});
 				});
 			}
 
-			return ConfigureIoC(services, container);
+			return ConfigureIoC(services, _container);
 		}
 
 		public IServiceProvider ConfigureIoC(IServiceCollection services, IContainer container)
@@ -67,9 +72,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				app.UseHsts();
 			}
 
-			if (AllowedCorsOrigins != null)
+			if (_allowedCorsOrigins != null)
 			{
-				app.UseCors(SameDomainOrigin);
+				app.UseCors(AllowedCorsOriginsPolicy);
 			}
 
 			app.UseHealthChecks("/health");
