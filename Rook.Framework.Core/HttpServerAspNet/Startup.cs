@@ -60,6 +60,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 			services.AddSwaggerGen(c =>
 			{
+				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName?.Name, Version = entryAssemblyName?.Version.ToString() });
 			});
 
@@ -101,6 +102,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
 			{
+				c.RoutePrefix = "";
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", entryAssemblyName?.Version.ToString());
 			});
 
