@@ -26,7 +26,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-	        _corsPolicies =_container.GetInstance<IDictionary<string, CorsPolicy>>();
+	        _corsPolicies =_container.TryGetInstance<IDictionary<string, CorsPolicy>>() ?? new Dictionary<string, CorsPolicy>();
 			var configurationManager = _container.GetInstance<IConfigurationManager>();
 
             services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");

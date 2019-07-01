@@ -15,10 +15,10 @@ namespace test_service
 			var container = Bootstrapper.Init();
 			IService instance = container.GetInstance<IService>();
 
-			container.Configure((configuration) => configuration.For<IDictionary<string, CorsPolicy>>().Use(() => new Dictionary<string, CorsPolicy>
-			{
-				{ "_allowedCorsOriginsPolicy", new CorsPolicyBuilder().WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().Build() }
-			}));
+			//container.Configure((configuration) => configuration.For<IDictionary<string, CorsPolicy>>().Use(() => new Dictionary<string, CorsPolicy>
+			//{
+			//	{ "_allowedCorsOriginsPolicy", new CorsPolicyBuilder().WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().Build() }
+			//}));
 
 			Thread.CurrentThread.Name = $"{ServiceInfo.Name} Main Thread";
 
