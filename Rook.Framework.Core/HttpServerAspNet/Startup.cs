@@ -18,6 +18,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		private IDictionary<string, CorsPolicy> _corsPolicies;
 		private bool _enableSubdomainCorsPolicy;
 		public const string _enableSubdomainCorsPolicyName = "EnableSubdomainCorsPolicy";
+		public static List<Assembly> MvcAssembliesToRegister { get; set; } = new List<Assembly> { Assembly.GetEntryAssembly() };
 
 		public Startup(IContainer container)
         {
@@ -31,9 +32,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
             services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
 
-			services.AddMvc()
-				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-				.AddApplicationPart(Assembly.GetEntryAssembly());
+            var mvcBuilder = services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+			foreach (var assembly in MvcAssembliesToRegister)
+			{
+				mvcBuilder.AddApplicationPart(assembly);
+			}
 
             _enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
 			
