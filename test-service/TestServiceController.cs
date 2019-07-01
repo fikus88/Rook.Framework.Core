@@ -1,7 +1,5 @@
-﻿using System.Threading;
-using Microsoft.AspNetCore.Cors;
+﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {

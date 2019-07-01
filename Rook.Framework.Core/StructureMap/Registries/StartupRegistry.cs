@@ -1,7 +1,9 @@
-﻿using Rook.Framework.Core.Application.Bus;
+﻿using System;
+using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Application.Scaling;
 using Rook.Framework.Core.Application.Subscribe;
 using Rook.Framework.Core.Backplane;
+using Rook.Framework.Core.Common;
 using Rook.Framework.Core.HttpServer;
 using Rook.Framework.Core.HttpServerAspNet;
 using Rook.Framework.Core.Monitoring;
@@ -12,11 +14,29 @@ namespace Rook.Framework.Core.StructureMap.Registries
 {
     public class StartupRegistry : Registry
     {
-        public StartupRegistry()
-        {
-	        ForConcreteType<AspNetHttp>().Configure.Singleton();
-			For<IStartable>().Singleton().Add(x => x.GetInstance<AspNetHttp>());
-			For<IStartStoppable>().Singleton().Add(x => x.GetInstance<AspNetHttp>());
+	    public StartupRegistry()
+	    {
+		    var configurationContainer = new Container(new ConfigurationRegistry());
+		    var configurationManager = configurationContainer.GetInstance<IConfigurationManager>();
+
+		    if (!Enum.TryParse(configurationManager.Get<string>("HttpServerType", "AspNetHttp"), out HttpServerType httpServerType))
+		    {
+			    throw new ArgumentException("Invalid value provided for HttpServerType in configuration");
+		    }
+
+		    switch(httpServerType)
+		    {
+				case HttpServerType.NanoHttp:
+					ForConcreteType<NanoHttp>().Configure.Singleton();
+					For<IStartable>().Singleton().Add(x => x.GetInstance<NanoHttp>());
+					For<IStartStoppable>().Singleton().Add(x => x.GetInstance<NanoHttp>());
+					break;
+				default:
+					ForConcreteType<AspNetHttp>().Configure.Singleton();
+					For<IStartable>().Singleton().Add(x => x.GetInstance<AspNetHttp>());
+					For<IStartStoppable>().Singleton().Add(x => x.GetInstance<AspNetHttp>());
+					break;
+		    }
 
 			For<IStartable>().Add(x => x.GetInstance<ServiceMetrics>());
 

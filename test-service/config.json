@@ -3,5 +3,6 @@
 	"LogLevel": "Info",
 	"UseStructureMap": true,
 	"Port": 80,
-	"EnableSubdomainCorsPolicy": true
+	"EnableSubdomainCorsPolicy": true,
+	"HttpServerType": "AspNetHttp"
 }

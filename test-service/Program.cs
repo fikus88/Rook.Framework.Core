@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Rook.Framework.Core.Common;
-using Rook.Framework.Core.HttpServer;
 using Rook.Framework.Core.Services;
 using Rook.Framework.Core.StructureMap;
 

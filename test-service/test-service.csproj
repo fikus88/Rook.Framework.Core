@@ -11,11 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MessageHandlers\Needs" />
-    <Folder Include="MessageHandlers\Solutions" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Rook.Framework.Core\Rook.Framework.Core.csproj" />
   </ItemGroup>
 
