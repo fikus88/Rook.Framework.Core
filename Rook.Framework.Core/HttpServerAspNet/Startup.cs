@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Common;
 using StructureMap;
+using Microsoft.OpenApi.Models;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -54,6 +55,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				}
 			});
 
+			// Swagger
+			var entryAssemblyName = Assembly.GetEntryAssembly()?.GetName();
+
+			services.AddSwaggerGen(c =>
+			{
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName?.Name, Version = entryAssemblyName?.Version.ToString() });
+			});
+
 			return ConfigureIoC(services, _container);
 		}
 
@@ -85,6 +94,15 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			
 			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
+
+			// Swagger
+			var entryAssemblyName = Assembly.GetEntryAssembly()?.GetName();
+
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
+			{
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", entryAssemblyName?.Version.ToString());
+			});
 
 			app.UseMvc();
 		}
