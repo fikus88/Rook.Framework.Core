@@ -37,7 +37,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
             _enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
 			
-            if (!_enableSubdomainCorsPolicy)
+            if (_enableSubdomainCorsPolicy)
             {
 	            _corsPolicies.Add(_enableSubdomainCorsPolicyName,  new CorsPolicyBuilder().SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod().Build());
             }
