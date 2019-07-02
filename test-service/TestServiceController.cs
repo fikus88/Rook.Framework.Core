@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
-	[EnableCors("_allowedCorsOriginsPolicy")]
+	//[EnableCors("_allowedCorsOriginsPolicy")]
 	[Route("[controller]")]
 	[ApiController]
 	public class TestServiceController : ControllerBase
