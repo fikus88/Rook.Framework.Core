@@ -47,9 +47,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.OperationFilter<CustomTagOperationFilter>();
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString() });
+
 				var xmlFile = $"{entryAssemblyName.Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-				c.IncludeXmlComments(xmlPath);
+
+				if (File.Exists(xmlPath))
+				{
+					c.IncludeXmlComments(xmlPath);
+				}
 			});
 
 			return services;
