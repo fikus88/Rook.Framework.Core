@@ -10,8 +10,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	{
 		public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
 		{
-			var test = new OpenApiResponses { { "test", new OpenApiResponse() } };
-
 			swaggerDoc.Paths.Add("/health", new OpenApiPathItem()
 			{
 				Operations = new Dictionary<OperationType, OpenApiOperation>()

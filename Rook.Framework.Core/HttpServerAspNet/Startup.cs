@@ -24,9 +24,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
         {
 	        _container = container;
 	        var configurationManager = _container.GetInstance<IConfigurationManager>();
-	        _enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
-	        _entryAssemblyName = Assembly.GetEntryAssembly()?.GetName() ?? new AssemblyName("Unknown") { Version = new Version(1, 0) };
+	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
 
+			_enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
+	        _entryAssemblyName = entryAssembly.GetName();
         }
 
 		public IServiceProvider ConfigureServices(IServiceCollection services)

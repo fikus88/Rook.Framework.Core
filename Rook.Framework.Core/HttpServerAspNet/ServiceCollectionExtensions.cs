@@ -45,11 +45,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			services.AddSwaggerGen(c =>
 			{
 				c.DocumentFilter<HealthCheckDocumentFilter>();
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName?.Name, Version = entryAssemblyName?.Version.ToString() });
-				// Swagger
-
-				// Set the comments path for the Swagger JSON and UI.
-				var xmlFile = $"{entryAssemblyName?.Name}.xml";
+				c.OperationFilter<CustomTagOperationFilter>();
+				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString() });
+				var xmlFile = $"{entryAssemblyName.Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 				c.IncludeXmlComments(xmlPath);
 			});
