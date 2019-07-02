@@ -15,7 +15,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				.Union(context.MethodInfo.GetCustomAttributes(true))
 				.OfType<SwaggerTagAttribute>();
 
-			operation.Tags = swaggerTagAttributes.SelectMany(x => x.TagNames).Select(x => new OpenApiTag { Name = x}).ToList();
+			operation.Tags = swaggerTagAttributes.SelectMany(x => x.TagNames).Select(x => new OpenApiTag { Name = x }).ToList();
 		}
 	}
 }

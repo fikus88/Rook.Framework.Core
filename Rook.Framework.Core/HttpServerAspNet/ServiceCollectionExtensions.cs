@@ -22,6 +22,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				mvcBuilder.AddApplicationPart(assembly);
 			}
 
+			services.AddRouting(options => options.LowercaseUrls = true);
+
 			return mvcBuilder;
 		}
 
