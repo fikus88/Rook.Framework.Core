@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			{
 				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName?.Name, Version = entryAssemblyName?.Version.ToString() });
+				// Swagger
+
+				// Set the comments path for the Swagger JSON and UI.
+				var xmlFile = $"{entryAssemblyName?.Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				c.IncludeXmlComments(xmlPath);
 			});
 
 			return services;

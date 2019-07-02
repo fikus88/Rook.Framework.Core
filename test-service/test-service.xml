@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>test-service</name>
+    </assembly>
+    <members>
+        <member name="M:Rook.Framework.Core.HttpServerAspNet.TestServiceController.GetHealthStatus">
+            <summary>
+            Get the Health Status of the application
+            </summary>
+            <returns>A string representation of the Health Status of the application</returns>
+        </member>
+    </members>
+</doc>
