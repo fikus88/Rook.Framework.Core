@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Common;
 using StructureMap;
@@ -24,7 +27,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public Startup(IContainer container)
         {
 	        _container = container;
-	        _aspNetStartupConfiguration = _container.GetInstance<IAspNetStartupConfiguration>();
+	        _aspNetStartupConfiguration = _container.TryGetInstance<IAspNetStartupConfiguration>();
 
 	        var configurationManager = _container.GetInstance<IConfigurationManager>();
 	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
@@ -36,14 +39,18 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 			services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
-            services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration.ActionFilterTypes);
+            services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration != null 
+	            ? _aspNetStartupConfiguration.ActionFilterTypes 
+	            : Enumerable.Empty<Type>());
             services.AddCustomCors(_container);
             services.AddSwagger(_entryAssemblyName);
 			return services.AddStructureMap(_container);
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
+			loggerFactory.AddProvider(new RookLoggerProvider(_container));
+			
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();

@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Rook.Framework.Core.Common;
 using Rook.Framework.Core.Services;
 using StructureMap;
+using Microsoft.Extensions.Logging;
+using ILogger = Rook.Framework.Core.Common.ILogger;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -61,7 +63,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		{
 			var url = $"http://test.localhost:{port}";
 			_logger.Info($"{nameof(AspNetHttp)}.{nameof(CreateWebHostBuilder)}", new LogItem("Event", "Running ASP.NET Web Host"), new LogItem("Port", 0));
-			return WebHost.CreateDefaultBuilder().UseStartup<Startup>().ConfigureServices((services) => services.AddSingleton(_container)).UseUrls(url);
+			return WebHost.CreateDefaultBuilder()
+				.ConfigureLogging((logging) => logging.ClearProviders())
+				.UseStartup<Startup>()
+				.ConfigureServices((services) => services.AddSingleton(_container))
+				.UseUrls(url);
 		}
 
 		public void Stop()
