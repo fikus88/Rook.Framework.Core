@@ -44,8 +44,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			_aspNetStartupConfiguration.AddMiddleware(app);
-
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();

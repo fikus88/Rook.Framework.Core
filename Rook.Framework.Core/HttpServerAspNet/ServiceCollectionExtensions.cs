@@ -20,7 +20,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				{
 					foreach (var actionFilter in actionFilterTypes.Where(x => typeof(IFilterMetadata).IsAssignableFrom(x)))
 					{
-						Console.WriteLine($"Adding type {actionFilter.Name}");
 						options.Filters.Add(actionFilter);
 					}
 				})
