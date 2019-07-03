@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using StructureMap;
@@ -12,9 +14,16 @@ namespace Rook.Framework.Core.HttpServerAspNet
 {
 	internal static class ServiceCollectionExtensions
 	{
-		internal static IMvcBuilder AddCustomMvc(this IServiceCollection services, List<Assembly> mvcAssembliesToRegister)
+		internal static IMvcBuilder AddCustomMvc(this IServiceCollection services, List<Assembly> mvcAssembliesToRegister, IEnumerable<Type> actionFilterTypes)
 		{
-			var mvcBuilder = services.AddMvc()
+			var mvcBuilder = services.AddMvc(options =>
+				{
+					foreach (var actionFilter in actionFilterTypes.Where(x => typeof(IFilterMetadata).IsAssignableFrom(x)))
+					{
+						Console.WriteLine($"Adding type {actionFilter.Name}");
+						options.Filters.Add(actionFilter);
+					}
+				})
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			foreach (var assembly in mvcAssembliesToRegister)

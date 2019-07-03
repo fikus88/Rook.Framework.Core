@@ -16,6 +16,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	public class Startup
 	{
         private readonly IContainer _container;
+        private readonly IAspNetStartupConfiguration _aspNetStartupConfiguration;
         private readonly bool _enableSubdomainCorsPolicy;
         private readonly AssemblyName _entryAssemblyName;
         public static List<Assembly> MvcAssembliesToRegister { get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
@@ -23,6 +24,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public Startup(IContainer container)
         {
 	        _container = container;
+	        _aspNetStartupConfiguration = _container.GetInstance<IAspNetStartupConfiguration>();
+
 	        var configurationManager = _container.GetInstance<IConfigurationManager>();
 	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
 
@@ -33,7 +36,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 			services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
-            services.AddCustomMvc(MvcAssembliesToRegister);
+            services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration.ActionFilterTypes);
             services.AddCustomCors(_container);
             services.AddSwagger(_entryAssemblyName);
 			return services.AddStructureMap(_container);
@@ -41,6 +44,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
+			_aspNetStartupConfiguration.AddMiddleware(app);
+
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
