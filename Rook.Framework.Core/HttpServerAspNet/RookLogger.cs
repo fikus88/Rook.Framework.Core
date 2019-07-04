@@ -39,7 +39,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
 		{
 			var message = formatter(state, exception);
-			_rookFrameworkLogger.Warn($"{_name}[{eventId.Id}]", new LogItem("Message", message));
 
 			var operation = $"{_name}[{eventId.Id}]";
 			var logItem = new LogItem("Message", message);

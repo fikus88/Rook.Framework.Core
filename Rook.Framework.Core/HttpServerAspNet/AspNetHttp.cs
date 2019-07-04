@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Rook.Framework.Core.Common;
 using Rook.Framework.Core.Services;
@@ -48,7 +51,16 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				_logger.Info($"{nameof(AspNetHttp)}.{nameof(RunWebHost)}",
 					new LogItem("Event", "Building ASP.NET Web Host"));
 				_webHost = CreateWebHostBuilder().Build();
-				_webHost.Run();
+				_webHost.Start();
+
+				foreach (var address in _webHost.ServerFeatures.Get<IServerAddressesFeature>().Addresses)
+				{
+					var url = new Uri(address);
+					_logger.Info($"{nameof(AspNetHttp)}.{nameof(RunWebHost)}",
+						new LogItem("Event", "WebHost started"), new LogItem("Url", url.ToString()));
+				}
+
+				_webHost.WaitForShutdown();
 			}
 			catch (Exception e)
 			{
@@ -61,8 +73,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		private IWebHostBuilder CreateWebHostBuilder()
 		{
-			var url = $"http://test.localhost:{port}";
-			_logger.Info($"{nameof(AspNetHttp)}.{nameof(CreateWebHostBuilder)}", new LogItem("Event", "Running ASP.NET Web Host"), new LogItem("Port", 0));
+			var url = $"http://*:{port}";
 			return WebHost.CreateDefaultBuilder()
 				.ConfigureLogging((logging) => logging.ClearProviders())
 				.UseStartup<Startup>()

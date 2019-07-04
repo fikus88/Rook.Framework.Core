@@ -2,7 +2,7 @@
 	"QueueUri": "amqp://guest:guest@queue:5672",
 	"LogLevel": "Info",
 	"UseStructureMap": true,
-	"Port": 8500,
+	
 	"EnableSubdomainCorsPolicy": true,
 	"HttpServerType": "AspNetHttp"
 }
