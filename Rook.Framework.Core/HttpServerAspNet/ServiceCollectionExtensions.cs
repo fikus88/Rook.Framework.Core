@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -23,6 +24,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 						options.Filters.Add(actionFilter);
 					}
 				})
+				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(mvcAssembliesToRegister))
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 			foreach (var assembly in mvcAssembliesToRegister)
