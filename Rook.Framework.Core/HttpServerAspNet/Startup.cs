@@ -17,6 +17,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
         private readonly IContainer _container;
         private readonly IAspNetStartupConfiguration _aspNetStartupConfiguration;
         private readonly bool _enableSubdomainCorsPolicy;
+		private readonly string _allowedSubdomainCorsPolicyOrigins;
         private readonly AssemblyName _entryAssemblyName;
         public static List<Assembly> MvcAssembliesToRegister { get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
 
@@ -29,6 +30,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
 
 			_enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
+			_allowedSubdomainCorsPolicyOrigins = configurationManager.Get("_allowedSubdomainCorsPolicyOrigins", string.Empty);
 	        _entryAssemblyName = entryAssembly.GetName();
         }
 
@@ -58,7 +60,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 			if (_enableSubdomainCorsPolicy)
 			{
-				app.UseCors(policy => policy.SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod());
+				app.UseCors(policy => policy.WithOrigins(_allowedSubdomainCorsPolicyOrigins).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod());
 			}
 			
 			app.UseHealthChecks("/health");
