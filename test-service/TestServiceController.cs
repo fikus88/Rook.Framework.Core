@@ -6,7 +6,6 @@ using Swashbuckle.Swagger.Annotations;
 namespace Rook.Framework.Core.HttpServerAspNet
 {
 	[Produces("application/json")]
-	[EnableCors("_allowedCorsOriginsPolicy")]
 	[Route("[controller]")]
 	[ApiController]
 	public class TestServiceController : ControllerBase

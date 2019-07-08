@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Rook.Framework.Core.Common;
 using StructureMap;
 
 namespace Rook.Framework.Core.HttpServerAspNet
@@ -37,15 +39,19 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return mvcBuilder;
 		}
 
-		internal static IServiceCollection AddCustomCors(this IServiceCollection services, IContainer container)
+		internal static IServiceCollection AddCustomCors(this IServiceCollection services, IContainer container, ILogger logger)
 		{
 	        var corsPolicies = container.TryGetInstance<IDictionary<string, CorsPolicy>>() ?? new Dictionary<string, CorsPolicy>();
+
+	        logger.Info("AddCustomCors", new LogItem("FoundCustomCorsPolicies", corsPolicies.Count));
 
 	        services.AddCors(options =>
 			{
 				foreach (var corsPolicy in corsPolicies)
 				{
 					options.AddPolicy(corsPolicy.Key, corsPolicy.Value);
+					logger.Info("AddedCustomCorsPolicy", new LogItem("CorsPolicyKey", corsPolicy.Key),
+						new LogItem("CorsPolicyValue", JsonConvert.SerializeObject(corsPolicy.Value)));
 				}
 			});
 

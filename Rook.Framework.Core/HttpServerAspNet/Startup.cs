@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Common;
 using StructureMap;
+using ILogger = Rook.Framework.Core.Common.ILogger;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -19,12 +20,15 @@ namespace Rook.Framework.Core.HttpServerAspNet
         private readonly bool _enableSubdomainCorsPolicy;
 		private readonly string _allowedSubdomainCorsPolicyOrigins;
         private readonly AssemblyName _entryAssemblyName;
+        private readonly ILogger _logger;
+
         public static List<Assembly> MvcAssembliesToRegister { get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
 
 		public Startup(IContainer container)
         {
 	        _container = container;
 	        _aspNetStartupConfiguration = _container.TryGetInstance<IAspNetStartupConfiguration>();
+	        _logger = _container.GetInstance<ILogger>();
 
 	        var configurationManager = _container.GetInstance<IConfigurationManager>();
 	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
@@ -40,7 +44,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
             services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration != null 
 	            ? _aspNetStartupConfiguration.ActionFilterTypes 
 	            : Enumerable.Empty<Type>());
-            services.AddCustomCors(_container);
+            services.AddCustomCors(_container, _logger);
             services.AddSwagger(_entryAssemblyName);
 			return services.AddStructureMap(_container);
 		}
@@ -58,8 +62,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				app.UseHsts();
 			}
 
+			_logger.Info("Configure", new LogItem("EnableSubdomainCorsPolicy", _enableSubdomainCorsPolicy.ToString()));
 			if (_enableSubdomainCorsPolicy)
 			{
+				_logger.Info("Configure", new LogItem("AllowedSubDomainCorsPolicyOrigins", _allowedSubdomainCorsPolicyOrigins));
 				app.UseCors(policy => policy.WithOrigins(_allowedSubdomainCorsPolicyOrigins).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod());
 			}
 			
