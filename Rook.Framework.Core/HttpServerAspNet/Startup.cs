@@ -30,7 +30,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
 
 			_enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
-			_allowedSubdomainCorsPolicyOrigins = configurationManager.Get("_allowedSubdomainCorsPolicyOrigins", string.Empty);
+			_allowedSubdomainCorsPolicyOrigins = configurationManager.Get("AllowedSubdomainCorsPolicyOrigins", string.Empty);
 	        _entryAssemblyName = entryAssembly.GetName();
         }
 
