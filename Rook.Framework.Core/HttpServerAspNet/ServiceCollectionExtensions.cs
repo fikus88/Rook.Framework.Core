@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -17,37 +19,67 @@ namespace Rook.Framework.Core.HttpServerAspNet
 {
 	internal static class ServiceCollectionExtensions
 	{
-		internal static IMvcBuilder AddCustomMvc(this IServiceCollection services, List<Assembly> mvcAssembliesToRegister, IEnumerable<Type> actionFilterTypes)
+		internal static IMvcBuilder AddCustomMvc(this IServiceCollection services, StartupOptions startupOptions)
 		{
 			var mvcBuilder = services.AddMvc(options =>
 				{
-					foreach (var actionFilter in actionFilterTypes.Where(x => typeof(IFilterMetadata).IsAssignableFrom(x)))
+					foreach (var actionFilter in startupOptions.Filters)
 					{
 						options.Filters.Add(actionFilter);
 					}
 				})
-				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(mvcAssembliesToRegister))
+				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(startupOptions.MvcApplicationPartAssemblies))
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-			foreach (var assembly in mvcAssembliesToRegister)
+			foreach (var assembly in startupOptions.MvcApplicationPartAssemblies)
 			{
 				mvcBuilder.AddApplicationPart(assembly);
 			}
 
 			services.AddRouting(options => options.LowercaseUrls = true);
-
+			
 			return mvcBuilder;
 		}
 
-		internal static IServiceCollection AddCustomCors(this IServiceCollection services, IContainer container, ILogger logger)
+		internal static AuthenticationBuilder AddCustomAuthentication(this IServiceCollection services)
 		{
-	        var corsPolicies = container.TryGetInstance<IDictionary<string, CorsPolicy>>() ?? new Dictionary<string, CorsPolicy>();
+			return services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+				{
+					options.Authority = "http://localhost:5000";
+					options.RequireHttpsMetadata = false;
+					options.Audience = "TestApi";
+				});
+		}
 
-	        logger.Info("AddCustomCors", new LogItem("FoundCustomCorsPolicies", corsPolicies.Count));
+		internal static IServiceCollection AddCustomAuthorization(this IServiceCollection services, ILogger logger,
+			StartupOptions startupOptions)
+		{
+			services.AddAuthorization(configure =>
+			{
+				foreach (var authorizationPolicy in startupOptions.AuthorizationPolicies)
+				{
+					logger.Info($"{nameof(ServiceCollectionExtensions)}.{nameof(AddCustomMvc)}", 
+						new LogItem("Event", $"Adding authorization policy. Name: '{authorizationPolicy.Key}', Policy: {JsonConvert.SerializeObject(authorizationPolicy.Value)}"));
+					configure.AddPolicy(authorizationPolicy.Key, authorizationPolicy.Value);
+				}
+			});
+
+			foreach (var authorizationHandler in startupOptions.AuthorizationHandlers)
+			{
+				services.AddSingleton(typeof(IAuthorizationHandler), authorizationHandler);
+			}
+
+			return services;
+		}
+
+		internal static IServiceCollection AddCustomCors(this IServiceCollection services, StartupOptions startupOptions, ILogger logger)
+		{
+	        logger.Info("AddCustomCors", new LogItem("FoundCustomCorsPolicies", startupOptions.CorsPolicies.Count));
 
 	        services.AddCors(options =>
 			{
-				foreach (var corsPolicy in corsPolicies)
+				foreach (var corsPolicy in startupOptions.CorsPolicies)
 				{
 					options.AddPolicy(corsPolicy.Key, corsPolicy.Value);
 					logger.Info("AddedCustomCorsPolicy", new LogItem("CorsPolicyKey", corsPolicy.Key),
@@ -64,8 +96,22 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			{
 				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.OperationFilter<CustomTagOperationFilter>();
+				c.OperationFilter<SecurityRequirementsOperationFilter>();
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString() });
 
+				c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+				{
+					Type = SecuritySchemeType.OAuth2,
+					Flows = new OpenApiOAuthFlows()
+					{
+						ClientCredentials = new OpenApiOAuthFlow()
+						{
+							TokenUrl= new Uri("http://localhost:5000/connect/token"),
+							Scopes = ImmutableDictionary<string, string>.Empty
+						}
+					}
+				});
+				
 				var xmlFile = $"{entryAssemblyName.Name}.xml";
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
 

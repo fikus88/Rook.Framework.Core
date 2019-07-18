@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,18 +14,16 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	public class Startup
 	{
         private readonly IContainer _container;
-        private readonly IAspNetStartupConfiguration _aspNetStartupConfiguration;
+        private readonly StartupOptions _startupOptions;
         private readonly bool _enableSubdomainCorsPolicy;
 		private readonly string _allowedSubdomainCorsPolicyOrigins;
         private readonly AssemblyName _entryAssemblyName;
         private readonly ILogger _logger;
 
-        public static List<Assembly> MvcAssembliesToRegister { get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
-
-		public Startup(IContainer container)
+		public Startup(IContainer container, StartupOptions startupOptions)
         {
 	        _container = container;
-	        _aspNetStartupConfiguration = _container.TryGetInstance<IAspNetStartupConfiguration>();
+	        _startupOptions = startupOptions;
 	        _logger = _container.GetInstance<ILogger>();
 
 	        var configurationManager = _container.GetInstance<IConfigurationManager>();
@@ -41,11 +37,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 			services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
-			services.AddCustomCors(_container, _logger);
-            services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration != null 
-	            ? _aspNetStartupConfiguration.ActionFilterTypes 
-	            : Enumerable.Empty<Type>());
+			services.AddCustomMvc(_startupOptions);
+			services.AddCustomAuthentication();
+			services.AddCustomAuthorization(_logger, _startupOptions);
+            services.AddCustomCors(_startupOptions, _logger);
             services.AddSwagger(_entryAssemblyName);
+
 			return services.AddStructureMap(_container);
 		}
 
@@ -62,10 +59,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				app.UseHsts();
 			}
 
-			_logger.Info("Configure", new LogItem("EnableSubdomainCorsPolicy", _enableSubdomainCorsPolicy.ToString()));
+			_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("EnableSubdomainCorsPolicy", _enableSubdomainCorsPolicy.ToString()));
 			if (_enableSubdomainCorsPolicy)
 			{
-				_logger.Info("Configure", new LogItem("AllowedSubDomainCorsPolicyOrigins", _allowedSubdomainCorsPolicyOrigins));
+				_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("AllowedSubDomainCorsPolicyOrigins", _allowedSubdomainCorsPolicyOrigins));
 				var allowedOriginsString = _allowedSubdomainCorsPolicyOrigins;
 
 				var allowedOrigins = allowedOriginsString.Split(';');
@@ -112,6 +109,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", _entryAssemblyName.Version.ToString());
 			});
 
+			app.UseAuthentication();
 			app.UseMvc();
 		}
 	}
