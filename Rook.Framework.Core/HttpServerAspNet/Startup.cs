@@ -66,13 +66,44 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			if (_enableSubdomainCorsPolicy)
 			{
 				_logger.Info("Configure", new LogItem("AllowedSubDomainCorsPolicyOrigins", _allowedSubdomainCorsPolicyOrigins));
-				app.UseCors(policy => policy.WithOrigins(_allowedSubdomainCorsPolicyOrigins).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod());
+				var allowedOriginsString = _allowedSubdomainCorsPolicyOrigins;
+
+				var allowedOrigins = allowedOriginsString.Split(';');
+
+				app.UseCors(policy => policy.WithOrigins(allowedOrigins).SetIsOriginAllowedToAllowWildcardSubdomains().AllowAnyHeader().AllowAnyMethod());
 			}
 			
 			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
 
-			app.UseMiddleware<RequestResponseLoggingMiddleware>();
+			app.Use(async (context, next) =>
+			{
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Initiated"));
+
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Outputting Request Headers"));
+
+				foreach (var header in context.Request.Headers)
+				{
+					_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "OutputHeader"), new LogItem(header.Key, header.Value));
+				}
+
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Header Output Complete"));
+
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Pipeline Begin"));
+
+				await next.Invoke();
+
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Pipeline Complete"));
+
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Outputting Response Headers"));
+
+				foreach (var header in context.Response.Headers)
+				{
+					_logger.Trace("HttpContext.Response Header", new LogItem(header.Key, header.Value));
+				}
+
+				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Header Output Complete"));
+			});
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
