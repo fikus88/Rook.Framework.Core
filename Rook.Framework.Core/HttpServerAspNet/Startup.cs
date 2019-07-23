@@ -41,10 +41,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public IServiceProvider ConfigureServices(IServiceCollection services)
         {
 			services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
+			services.AddCustomCors(_container, _logger);
             services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration != null 
 	            ? _aspNetStartupConfiguration.ActionFilterTypes 
 	            : Enumerable.Empty<Type>());
-            services.AddCustomCors(_container, _logger);
             services.AddSwagger(_entryAssemblyName);
 			return services.AddStructureMap(_container);
 		}
@@ -71,6 +71,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			
 			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
+
+			app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
