@@ -18,6 +18,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 	    public async Task Invoke(HttpContext context)
 	    {
+			_logger.Trace(typeof(RequestResponseLoggingMiddleware) + ".Invoke");
+
 	        //Copy a pointer to the original response body stream
 	        var originalBodyStream = context.Response.Body;
 
@@ -30,6 +32,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	            //Continue down the Middleware pipeline, eventually returning to this class
 	            await _next(context);
 
+	            _logger.Trace(typeof(RequestResponseLoggingMiddleware) + ".Invoke", new LogItem("Action", "Outputting Headers"));
+				
 				// Log the Header
 				foreach(var header in context.Response.Headers)
 				{
