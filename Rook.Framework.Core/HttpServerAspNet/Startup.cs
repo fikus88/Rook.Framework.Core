@@ -72,6 +72,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
 
+			app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
 			{
