@@ -3,6 +3,7 @@
 	public enum HttpServerType
 	{
 		NanoHttp,
-		AspNetHttp
+		AspNetHttp,
+		None
 	}
 }

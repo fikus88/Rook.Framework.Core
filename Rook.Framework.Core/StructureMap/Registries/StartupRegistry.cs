@@ -26,6 +26,8 @@ namespace Rook.Framework.Core.StructureMap.Registries
 
 		    switch(httpServerType)
 		    {
+				case HttpServerType.None:
+					break;
 				case HttpServerType.NanoHttp:
 					ForConcreteType<NanoHttp>().Configure.Singleton();
 					For<IStartable>().Singleton().Add(x => x.GetInstance<NanoHttp>());
