@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Reflection;
 using FluentValidation.AspNetCore;
@@ -43,12 +44,16 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		internal static AuthenticationBuilder AddCustomAuthentication(this IServiceCollection services)
 		{
+			// Disable default JWT claim mapping (see https://github.com/aspnet/AspNetCore/issues/4660)
+			JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
 			return services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 				{
 					options.Authority = "http://localhost:5000";
 					options.RequireHttpsMetadata = false;
 					options.Audience = "TestApi";
+					options.TokenValidationParameters.RoleClaimType = "role";
 				});
 		}
 
