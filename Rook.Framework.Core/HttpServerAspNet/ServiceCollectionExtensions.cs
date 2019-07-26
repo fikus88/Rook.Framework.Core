@@ -42,7 +42,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return mvcBuilder;
 		}
 
-		internal static AuthenticationBuilder AddCustomAuthentication(this IServiceCollection services)
+		internal static AuthenticationBuilder AddCustomAuthentication(this IServiceCollection services, StartupOptions startupOptions)
 		{
 			// Disable default JWT claim mapping (see https://github.com/aspnet/AspNetCore/issues/4660)
 			JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -50,9 +50,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 				{
-					options.Authority = "http://localhost:5000";
-					options.RequireHttpsMetadata = false;
-					options.Audience = "TestApi";
+					options.Authority = startupOptions.IdentityServerOptions.Url;
+					options.RequireHttpsMetadata = startupOptions.IdentityServerOptions.RequireHttps;
+					options.Audience = startupOptions.IdentityServerOptions.ValidAudience;
+					options.TokenValidationParameters.ValidateAudience = !string.IsNullOrWhiteSpace(startupOptions.IdentityServerOptions.ValidAudience);
 					options.TokenValidationParameters.RoleClaimType = "role";
 				});
 		}
@@ -95,7 +96,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return services;
 		}
 
-		internal static IServiceCollection AddSwagger(this IServiceCollection services, AssemblyName entryAssemblyName)
+		internal static IServiceCollection AddSwagger(this IServiceCollection services, AssemblyName entryAssemblyName, string identityServerAddress)
 		{
 			services.AddSwaggerGen(c =>
 			{
@@ -111,14 +112,13 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					{
 						ClientCredentials = new OpenApiOAuthFlow()
 						{
-							TokenUrl= new Uri("http://localhost:5000/connect/token"),
+							TokenUrl= new Uri($"{identityServerAddress}/connect/token"),
 							Scopes = ImmutableDictionary<string, string>.Empty
 						}
 					}
 				});
 				
-				var xmlFile = $"{entryAssemblyName.Name}.xml";
-				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{entryAssemblyName.Name}.xml");
 
 				if (File.Exists(xmlPath))
 				{

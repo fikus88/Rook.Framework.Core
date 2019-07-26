@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -15,6 +13,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public IList<Type> AuthorizationHandlers { get; } = new List<Type>();
 		public CorsPolicyCollection CorsPolicies { get; } = new CorsPolicyCollection();
 		public IList<Assembly> MvcApplicationPartAssemblies{ get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
+		public IdentityServerOptions IdentityServerOptions { get; } = new IdentityServerOptions();
 	}
 
 	public class AuthorizationPolicyCollection : Dictionary<string, AuthorizationPolicy>
@@ -35,5 +34,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			configurePolicy(builder);
 			Add(policyName, builder.Build());
 		}
+	}
+
+	public class IdentityServerOptions
+	{
+		public bool RequireHttps { get; set; } = true;
+		public string ValidAudience { get; set; }
+		internal string Url { get; set; }
 	}
 }
