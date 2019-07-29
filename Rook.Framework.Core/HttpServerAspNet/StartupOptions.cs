@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class StartupOptions
 	{
-		public IList<Type> Filters { get; } = new List<Type>();
+		public FilterCollection Filters { get; } = new FilterCollection();
 		public AuthorizationPolicyCollection AuthorizationPolicies { get; } = new AuthorizationPolicyCollection();
+		public List<Type> SwaggerOperationFilters { get; } = new List<Type>();
 		public IList<Type> AuthorizationHandlers { get; } = new List<Type>();
 		public CorsPolicyCollection CorsPolicies { get; } = new CorsPolicyCollection();
 		public IList<Assembly> MvcApplicationPartAssemblies{ get; } = new List<Assembly> { Assembly.GetEntryAssembly() };

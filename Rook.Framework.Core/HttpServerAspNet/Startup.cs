@@ -39,7 +39,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			services.AddCustomAuthentication(_startupOptions);
 			services.AddCustomAuthorization(_logger, _startupOptions);
             services.AddCustomCors(_startupOptions, _logger);
-            services.AddSwagger(_entryAssemblyName, _startupOptions.IdentityServerOptions.Url);
+            services.AddSwagger(_entryAssemblyName, _startupOptions);
 
 			return services.AddStructureMap(_container);
 		}
@@ -63,8 +63,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("EnableSubdomainCorsPolicy", enableSubdomainCorsPolicy.ToString()));
 			if (enableSubdomainCorsPolicy)
 			{
-				_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("AllowedSubDomainCorsPolicyOrigins", _allowedSubdomainCorsPolicyOrigins));
-				var allowedOriginsString = _allowedSubdomainCorsPolicyOrigins;
+				_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("AllowedSubDomainCorsPolicyOrigins", allowedSubdomainCorsPolicyOrigins));
+				var allowedOriginsString = allowedSubdomainCorsPolicyOrigins;
 
 				var allowedOrigins = allowedOriginsString.Split(';');
 
@@ -73,7 +73,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			
 			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
-			app.UseMiddleware<HeaderLoggingMiddleware>();
 			app.Use(async (context, next) =>
 			{
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Initiated"));

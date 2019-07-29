@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -10,11 +11,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Rook.Framework.Core.Common;
 using StructureMap;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -24,9 +27,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		{
 			var mvcBuilder = services.AddMvc(options =>
 				{
-					foreach (var actionFilter in startupOptions.Filters)
+					foreach (var filter in startupOptions.Filters)
 					{
-						options.Filters.Add(actionFilter);
+						options.Filters.Add(filter);
 					}
 				})
 				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(startupOptions.MvcApplicationPartAssemblies))
@@ -96,14 +99,22 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return services;
 		}
 
-		internal static IServiceCollection AddSwagger(this IServiceCollection services, AssemblyName entryAssemblyName, string identityServerAddress)
+		internal static IServiceCollection AddSwagger(this IServiceCollection services, AssemblyName entryAssemblyName, StartupOptions startupOptions)
 		{
 			services.AddSwaggerGen(c =>
 			{
 				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.OperationFilter<CustomTagOperationFilter>();
-				c.OperationFilter<SecurityRequirementsOperationFilter>();
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString() });
+
+				foreach (var operationFilter in startupOptions.SwaggerOperationFilters)
+				{
+					c.OperationFilterDescriptors.Add(new FilterDescriptor()
+					{
+						Type = operationFilter,
+						Arguments = new object[] {}
+					});
+				}
 
 				c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
 				{
@@ -112,7 +123,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					{
 						ClientCredentials = new OpenApiOAuthFlow()
 						{
-							TokenUrl= new Uri($"{identityServerAddress}/connect/token"),
+							TokenUrl= new Uri($"{startupOptions.IdentityServerOptions.Url}/connect/token"),
 							Scopes = ImmutableDictionary<string, string>.Empty
 						}
 					}
