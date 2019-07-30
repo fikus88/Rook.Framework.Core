@@ -16,7 +16,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		/// <response code="400">If a bad request is sent to the method</response>
 		[HttpGet]
 		[SwaggerTag("TEST")]
-		public string AuthorizedGet()
+		public string Test()
 		{
 			return $"This is being returned from {nameof(TestServiceController)}";
 		}

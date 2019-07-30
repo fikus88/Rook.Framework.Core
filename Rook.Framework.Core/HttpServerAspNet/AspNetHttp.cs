@@ -17,7 +17,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class AspNetHttp : IStartStoppable
 	{
-        private static readonly StartupOptions StartupOptions = new StartupOptions();
+		private static readonly StartupOptions StartupOptions = new StartupOptions();
 		private readonly ILogger _logger;
 		private readonly IContainer _container;
 		private readonly int port;
