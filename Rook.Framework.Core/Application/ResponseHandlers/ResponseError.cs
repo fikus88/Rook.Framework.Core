@@ -11,6 +11,7 @@ namespace Rook.Framework.Core.Application.ResponseHandlers
 		[JsonConverter(typeof(StringEnumConverter))]
 		public ErrorType Type { get; set; }
 		public string Field { get; set; }
+		public string Description { get; set; }
 
 		public enum ErrorType
 		{
@@ -20,7 +21,8 @@ namespace Rook.Framework.Core.Application.ResponseHandlers
 			EmptyField,
 			UnexpectedField,
 			InvalidField,
-            ItemAlreadyExists
+            ItemAlreadyExists,
+			ItemDoesntExist
 		}
 	}
 }
