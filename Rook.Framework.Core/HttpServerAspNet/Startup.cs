@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,36 +14,33 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	public class Startup
 	{
         private readonly IContainer _container;
-        private readonly IAspNetStartupConfiguration _aspNetStartupConfiguration;
-        private readonly bool _enableSubdomainCorsPolicy;
-		private readonly string _allowedSubdomainCorsPolicyOrigins;
+        private readonly StartupOptions _startupOptions;
         private readonly AssemblyName _entryAssemblyName;
         private readonly ILogger _logger;
+        private readonly IConfigurationManager _configurationManager;
 
-        public static List<Assembly> MvcAssembliesToRegister { get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
-
-		public Startup(IContainer container)
+        public Startup(IContainer container, StartupOptions startupOptions)
         {
 	        _container = container;
-	        _aspNetStartupConfiguration = _container.TryGetInstance<IAspNetStartupConfiguration>();
+	        _startupOptions = startupOptions;
 	        _logger = _container.GetInstance<ILogger>();
 
-	        var configurationManager = _container.GetInstance<IConfigurationManager>();
-	        var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
+	        _configurationManager = _container.GetInstance<IConfigurationManager>();
+	        _startupOptions.IdentityServerOptions.Url = _configurationManager.Get<string>("IdentityServerAddress");
 
-			_enableSubdomainCorsPolicy = configurationManager.Get("EnableSubdomainCorsPolicy", false);
-			_allowedSubdomainCorsPolicyOrigins = configurationManager.Get("AllowedSubdomainCorsPolicyOrigins", string.Empty);
+			var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
 	        _entryAssemblyName = entryAssembly.GetName();
         }
 
 		public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
+		{
 			services.AddHealthChecks().AddCheck<RabbitMqHealthCheck>("rabbit_mq_health_check");
-			services.AddCustomCors(_container, _logger);
-            services.AddCustomMvc(MvcAssembliesToRegister, _aspNetStartupConfiguration != null 
-	            ? _aspNetStartupConfiguration.ActionFilterTypes 
-	            : Enumerable.Empty<Type>());
-            services.AddSwagger(_entryAssemblyName);
+			services.AddCustomMvc(_startupOptions);
+			services.AddCustomAuthentication(_startupOptions);
+			services.AddCustomAuthorization(_logger, _startupOptions);
+            services.AddCustomCors(_startupOptions, _logger);
+            services.AddSwagger(_entryAssemblyName, _startupOptions);
+
 			return services.AddStructureMap(_container);
 		}
 
@@ -62,11 +57,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				app.UseHsts();
 			}
 
-			_logger.Info("Configure", new LogItem("EnableSubdomainCorsPolicy", _enableSubdomainCorsPolicy.ToString()));
-			if (_enableSubdomainCorsPolicy)
+			var enableSubdomainCorsPolicy = _configurationManager.Get("EnableSubdomainCorsPolicy", false);
+			var allowedSubdomainCorsPolicyOrigins = _configurationManager.Get("AllowedSubdomainCorsPolicyOrigins", string.Empty);
+
+			_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("EnableSubdomainCorsPolicy", enableSubdomainCorsPolicy.ToString()));
+			if (enableSubdomainCorsPolicy)
 			{
-				_logger.Info("Configure", new LogItem("AllowedSubDomainCorsPolicyOrigins", _allowedSubdomainCorsPolicyOrigins));
-				var allowedOriginsString = _allowedSubdomainCorsPolicyOrigins;
+				_logger.Info($"{nameof(Startup)}.{nameof(Configure)}", new LogItem("AllowedSubDomainCorsPolicyOrigins", allowedSubdomainCorsPolicyOrigins));
+				var allowedOriginsString = allowedSubdomainCorsPolicyOrigins;
 
 				var allowedOrigins = allowedOriginsString.Split(';');
 
@@ -75,7 +73,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			
 			app.UseHealthChecks("/health");
 			app.UseHttpsRedirection();
-
 			app.Use(async (context, next) =>
 			{
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Initiated"));
@@ -111,7 +108,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				c.RoutePrefix = "";
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", _entryAssemblyName.Version.ToString());
 			});
-
+			app.UseAuthentication();
 			app.UseMvc();
 		}
 	}
