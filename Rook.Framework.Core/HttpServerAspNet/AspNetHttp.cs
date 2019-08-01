@@ -17,6 +17,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 {
 	public class AspNetHttp : IStartStoppable
 	{
+		private static readonly StartupOptions StartupOptions = new StartupOptions();
 		private readonly ILogger _logger;
 		private readonly IContainer _container;
 		private readonly int port;
@@ -36,6 +37,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 			port = configurationManager.Get("Port", defaultPort);
 			//requestTimeout = configurationManager.Get("RequestTimeout", defaultRequestTimeout);
+		}
+
+		public static void Configure(Action<StartupOptions> configure)
+		{
+			configure(StartupOptions);
 		}
 
 		public void Start()
@@ -77,7 +83,11 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return WebHost.CreateDefaultBuilder()
 				.ConfigureLogging((logging) => logging.ClearProviders())
 				.UseStartup<Startup>()
-				.ConfigureServices((services) => services.AddSingleton(_container))
+				.ConfigureServices((services) =>
+				{
+					services.AddSingleton(_container);
+					services.AddSingleton(StartupOptions);
+				})
 				.UseUrls(url);
 		}
 

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Swashbuckle.Swagger.Annotations;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -10,10 +8,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	[ApiController]
 	public class TestServiceController : ControllerBase
 	{
-		public TestServiceController()
-		{
-		}
-
 		/// <summary>
 		/// Get the Health Status of the application
 		/// </summary>
@@ -22,20 +16,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		/// <response code="400">If a bad request is sent to the method</response>
 		[HttpGet]
 		[SwaggerTag("TEST")]
-		public string GetHealthStatus()
+		public string Test()
 		{
 			return $"This is being returned from {nameof(TestServiceController)}";
-		}
-
-		/// <summary>
-		/// Post Test
-		/// </summary>
-		/// <returns></returns>
-		[HttpPost]
-		[SwaggerTag("TEST123")]
-		public string PostTest()
-		{
-			return "PostTestSuccess";
 		}
 	}
 }

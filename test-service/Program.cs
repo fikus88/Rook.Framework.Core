@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Threading;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Rook.Framework.Core.Common;
+using Rook.Framework.Core.HttpServerAspNet;
 using Rook.Framework.Core.Services;
 using Rook.Framework.Core.StructureMap;
 
@@ -15,10 +17,10 @@ namespace test_service
 			var container = Bootstrapper.Init();
 			IService instance = container.GetInstance<IService>();
 
-			//container.Configure((configuration) => configuration.For<IDictionary<string, CorsPolicy>>().Use(() => new Dictionary<string, CorsPolicy>
+			//AspNetHttp.Configure(options =>
 			//{
-			//	{ "_allowedCorsOriginsPolicy", new CorsPolicyBuilder().WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().Build() }
-			//}));
+			//	options.CorsPolicies.Add("_allowedCorsOriginsPolicy", policy => policy.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
+			//});
 
 			Thread.CurrentThread.Name = $"{ServiceInfo.Name} Main Thread";
 
