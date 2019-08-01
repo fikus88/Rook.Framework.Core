@@ -22,7 +22,8 @@ namespace Rook.Framework.Core.Application.ResponseHandlers
 			UnexpectedField,
 			InvalidField,
             ItemAlreadyExists,
-			ItemDoesntExist
+			ItemDoesNotExist,
+			RelationshipDoesNotExist
 		}
 	}
 }
