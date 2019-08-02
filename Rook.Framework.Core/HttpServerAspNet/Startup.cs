@@ -26,7 +26,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 	        _logger = _container.GetInstance<ILogger>();
 
 	        _configurationManager = _container.GetInstance<IConfigurationManager>();
-	        _startupOptions.IdentityServerOptions.Url = _configurationManager.Get<string>("IdentityServerAddress");
+	        _startupOptions.IdentityServerOptions.Url = _configurationManager.Get<string>("IdentityServerAddress", null);
 
 			var entryAssembly = Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("Unable to get entry assembly");
 	        _entryAssemblyName = entryAssembly.GetName();

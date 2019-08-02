@@ -5,6 +5,5 @@
 	"Port": 8500,
 	"EnableSubdomainCorsPolicy": true,
 	"HttpServerType": "AspNetHttp",
-	"AllowedSubdomainCorsPolicyOrigins": "http://*.*.mab-development.co.uk:4200",
-  "IdentityServerAddress": "http://localhost:5000"
+	"AllowedSubdomainCorsPolicyOrigins": "http://*.*.mab-development.co.uk:4200"
 }
