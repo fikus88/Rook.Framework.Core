@@ -42,6 +42,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 				var metricsContent = new MetricsHttpContent(_logger, metrics, contentType);
 				Response.StatusCode = (int) HttpStatusCode.OK;
+				Response.ContentType = contentType;
 				metricsContent.WriteToStream(Response.Body);
 
 				return new EmptyResult();

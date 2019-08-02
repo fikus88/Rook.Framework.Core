@@ -116,18 +116,21 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					});
 				}
 
-				c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
+				if (!string.IsNullOrWhiteSpace(startupOptions.IdentityServerOptions.Url))
 				{
-					Type = SecuritySchemeType.OAuth2,
-					Flows = new OpenApiOAuthFlows()
+					c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme()
 					{
-						ClientCredentials = new OpenApiOAuthFlow()
+						Type = SecuritySchemeType.OAuth2,
+						Flows = new OpenApiOAuthFlows()
 						{
-							TokenUrl= new Uri($"{startupOptions.IdentityServerOptions.Url}/connect/token"),
-							Scopes = ImmutableDictionary<string, string>.Empty
+							ClientCredentials = new OpenApiOAuthFlow()
+							{
+								TokenUrl = new Uri($"{startupOptions.IdentityServerOptions.Url}/connect/token"),
+								Scopes = ImmutableDictionary<string, string>.Empty
+							}
 						}
-					}
-				});
+					});
+				}
 				
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{entryAssemblyName.Name}.xml");
 
