@@ -105,6 +105,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			{
 				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.OperationFilter<CustomTagOperationFilter>();
+				c.SchemaFilter<SwaggerIgnoreSchemaFilter>();
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString() });
 
 				foreach (var operationFilter in startupOptions.SwaggerOperationFilters)
@@ -113,6 +114,15 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					{
 						Type = operationFilter,
 						Arguments = new object[] {}
+					});
+				}
+
+				foreach (var schemaFilter in startupOptions.SwaggerSchemaFitlers)
+				{
+					c.SchemaFilterDescriptors.Add(new FilterDescriptor()
+					{
+						Type = schemaFilter,
+						Arguments = new object[]{}
 					});
 				}
 
