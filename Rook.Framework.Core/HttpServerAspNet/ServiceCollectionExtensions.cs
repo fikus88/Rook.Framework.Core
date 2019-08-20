@@ -117,7 +117,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					});
 				}
 
-				foreach (var schemaFilter in startupOptions.SwaggerSchemaFitlers)
+				foreach (var schemaFilter in startupOptions.SwaggerSchemaFilters)
 				{
 					c.SchemaFilterDescriptors.Add(new FilterDescriptor()
 					{

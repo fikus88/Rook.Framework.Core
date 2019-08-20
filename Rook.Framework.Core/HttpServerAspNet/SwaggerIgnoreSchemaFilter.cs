@@ -5,23 +5,26 @@ using System.Reflection;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
+    /// <summary>
+    /// Applies filter to schema of the Swagger documentation request body
+    /// </summary>
 	public class SwaggerIgnoreSchemaFilter : ISchemaFilter
-	{
-		public void Apply(OpenApiSchema schema, SchemaFilterContext context)
-		{
-			if (schema?.Properties == null || context == null)
-				return;
+    {
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            if (schema?.Properties == null || context == null)
+                return;
 
-			var excludedProperties = context.Type.GetProperties()
-				.Where(t => 
-					t.GetCustomAttribute<SwaggerIgnoreAttribute>() 
-					!= null);
+            var excludedProperties = context.Type.GetProperties()
+                .Where(t =>
+                    t.GetCustomAttribute<SwaggerIgnoreAttribute>()
+                    != null);
 
-			foreach (var excludedProperty in excludedProperties)
-			{
-				if (schema.Properties.ContainsKey(excludedProperty.Name.ToLower()))
-					schema.Properties.Remove(excludedProperty.Name.ToLower());
-			}
-		}
-	}
+            foreach (var excludedProperty in excludedProperties)
+            {
+                if (schema.Properties.ContainsKey(excludedProperty.Name.ToLower()))
+                    schema.Properties.Remove(excludedProperty.Name.ToLower());
+            }
+        }
+    }
 }

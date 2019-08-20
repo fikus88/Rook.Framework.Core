@@ -14,7 +14,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public AuthorizationPolicyCollection AuthorizationPolicies { get; } = new AuthorizationPolicyCollection();
 		public List<Type> SwaggerOperationFilters { get; } = new List<Type>();
 		
-		public List<Type> SwaggerSchemaFitlers { get; } = new List<Type>();
+		public List<Type> SwaggerSchemaFilters { get; } = new List<Type>();
 		public IList<Type> AuthorizationHandlers { get; } = new List<Type>();
 		public CorsPolicyCollection CorsPolicies { get; } = new CorsPolicyCollection();
 		public IList<Assembly> MvcApplicationPartAssemblies{ get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
