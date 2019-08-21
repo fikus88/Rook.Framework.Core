@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Rook.Framework.Core.HttpServerAspNet;
@@ -6,7 +7,7 @@ using testService;
 namespace Rook.Framework.Core.HttpServerAspNet
 {
 [Produces("application/json")]
-[Route("testAttr/{Id}")]
+[Route("testAttr/{IntroducerId}")]
 [ApiController]
 public class TestAttributeController : ControllerBase
 {
@@ -20,7 +21,7 @@ public class TestAttributeController : ControllerBase
 	[SwaggerTag("TEST Attribute")]
 	public string Post(TestRequest req)
 	{
-		req.Id = int.Parse(ControllerContext.RouteData.Values["Id"].ToString());
+		req.IntroducerId = Guid.Parse(ControllerContext.RouteData.Values["IntroducerId"].ToString());
 		
 		return JsonConvert.SerializeObject(req);
 	}
