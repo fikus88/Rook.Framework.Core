@@ -26,6 +26,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					type = x.Type
 				}).ToList().FirstOrDefault();
 
+			var paramsHandled = hybridParameter?.type.GetProperties().Length;
+
 			for (var i = 0; i < operation.Parameters.Count; i++)
 			{
 				if (hybridParameter != null && hybridParameter.name == operation.Parameters[i].Name)
@@ -37,6 +39,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 					foreach (var propertyInfo in hybridParameter.type.GetProperties())
 					{
+						var paramSet = false;
+
 						foreach (var attribute in propertyInfo.GetCustomAttributes(typeof(HybridBindPropertyAttribute))
 							.ToList())
 						{
@@ -66,21 +70,30 @@ namespace Rook.Framework.Core.HttpServerAspNet
 							}
 
 							operation.Parameters.Insert(0, apiParam);
+							paramsHandled--;
+							paramSet = true;
 						}
+
+						if (!paramSet)
+							paramsHandled -=
+								!propertyInfo.GetCustomAttributes(typeof(SwaggerIgnoreAttribute)).Any() ? 0 : 1;
 					}
 
-					operation.RequestBody = new OpenApiRequestBody()
+					if (paramsHandled != 0)
 					{
-						Content = new Dictionary<string, OpenApiMediaType>
+						operation.RequestBody = new OpenApiRequestBody()
 						{
-							["application/json"] = new OpenApiMediaType
+							Content = new Dictionary<string, OpenApiMediaType>
 							{
-								Schema = context.SchemaRepository.Schemas[hybridParameter.type.Name]
-							}
-						},
-						Description = "Request Body",
-						Required = true
-					};
+								["application/json"] = new OpenApiMediaType
+								{
+									Schema = context.SchemaRepository.Schemas[hybridParameter.type.Name]
+								}
+							},
+							Description = "Request Body",
+							Required = true
+						};
+					}
 				}
 			}
 		}
