@@ -40,8 +40,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			services.AddCustomAuthorization(_logger, _startupOptions);
             services.AddCustomCors(_startupOptions, _logger);
             services.AddSwagger(_entryAssemblyName, _startupOptions);
-
-			return services.AddStructureMap(_container);
+            
+            return services.AddStructureMap(_container);
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
