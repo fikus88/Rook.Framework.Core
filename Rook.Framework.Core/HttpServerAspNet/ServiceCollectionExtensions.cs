@@ -145,10 +145,24 @@ namespace Rook.Framework.Core.HttpServerAspNet
 						Type = SecuritySchemeType.OAuth2,
 						Flows = new OpenApiOAuthFlows()
 						{
-							ClientCredentials = new OpenApiOAuthFlow()
+							ClientCredentials = new OpenApiOAuthFlow
 							{
 								TokenUrl = new Uri($"{startupOptions.IdentityServerOptions.Url}/connect/token"),
-								Scopes = ImmutableDictionary<string, string>.Empty
+								Scopes = new Dictionary<string, string>
+								{
+									{ "rookapi", "API scope" }
+								}
+							},
+							AuthorizationCode = new OpenApiOAuthFlow
+							{
+								AuthorizationUrl = new Uri($"{startupOptions.IdentityServerOptions.Url}/connect/authorize"),
+								TokenUrl = new Uri($"{startupOptions.IdentityServerOptions.Url}/connect/token"),
+								Scopes = new Dictionary<string, string>
+								{
+									{ "rookapi", "API scope" },
+									{ "openid", "OpenID scope" },
+									{ "profile", "Profile scope" }
+								}
 							}
 						}
 					});
