@@ -110,14 +110,15 @@ namespace Rook.Framework.Core
             }
         }
 
-        public BusResponse<TSolution> PublishAndWaitForTypedResponse<TNeed, TSolution>(Message<TNeed, TSolution> message, ResponseStyle responseStyle = ResponseStyle.WholeSolution, Func<string, bool> solutionMatchFunction = null)
+        public BusResponse<TSolution> PublishAndWaitForTypedResponse<TNeed, TSolution>(Message<TNeed, TSolution> message, ResponseStyle responseStyle = ResponseStyle.WholeSolution, Func<string, bool> solutionMatchFunction = null,
+	        JsonSerializerSettings jsonSerializerSettings = null)
         {
             var response = PublishAndWaitForResponse(message, responseStyle, solutionMatchFunction);
 
             var solution = default(IEnumerable<TSolution>);
             if (response.Solution != null)
             {
-                solution = JsonConvert.DeserializeObject<IEnumerable<TSolution>>(response.Solution);
+                solution = JsonConvert.DeserializeObject<IEnumerable<TSolution>>(response.Solution, jsonSerializerSettings);
             }
 
             return new BusResponse<TSolution>
