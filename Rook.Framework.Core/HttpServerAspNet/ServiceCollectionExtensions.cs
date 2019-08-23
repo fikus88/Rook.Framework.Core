@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Rook.Framework.Core.Common;
@@ -31,9 +32,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					{
 						options.Filters.Add(filter);
 					}
+
 				})
-				.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(startupOptions.MvcApplicationPartAssemblies))
-				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+				.AddFluentValidation(fv =>
+					fv.RegisterValidatorsFromAssemblies(startupOptions.MvcApplicationPartAssemblies))
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+				.AddHybridModelBinder();
 
 			foreach (var assembly in startupOptions.MvcApplicationPartAssemblies)
 			{
@@ -41,11 +45,13 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			}
 
 			services.AddRouting(options => options.LowercaseUrls = true);
+
 			
 			return mvcBuilder;
 		}
 
-		internal static AuthenticationBuilder AddCustomAuthentication(this IServiceCollection services, StartupOptions startupOptions)
+		internal static AuthenticationBuilder AddCustomAuthentication(this IServiceCollection services,
+			StartupOptions startupOptions)
 		{
 			// Disable default JWT claim mapping (see https://github.com/aspnet/AspNetCore/issues/4660)
 			JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -56,7 +62,8 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					options.Authority = startupOptions.IdentityServerOptions.Url;
 					options.RequireHttpsMetadata = startupOptions.IdentityServerOptions.RequireHttps;
 					options.Audience = startupOptions.IdentityServerOptions.ValidAudience;
-					options.TokenValidationParameters.ValidateAudience = !string.IsNullOrWhiteSpace(startupOptions.IdentityServerOptions.ValidAudience);
+					options.TokenValidationParameters.ValidateAudience =
+						!string.IsNullOrWhiteSpace(startupOptions.IdentityServerOptions.ValidAudience);
 					options.TokenValidationParameters.RoleClaimType = "role";
 				});
 		}
@@ -68,8 +75,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			{
 				foreach (var authorizationPolicy in startupOptions.AuthorizationPolicies)
 				{
-					logger.Info($"{nameof(ServiceCollectionExtensions)}.{nameof(AddCustomMvc)}", 
-						new LogItem("Event", $"Adding authorization policy. Name: '{authorizationPolicy.Key}', Policy: {JsonConvert.SerializeObject(authorizationPolicy.Value)}"));
+					logger.Info($"{nameof(ServiceCollectionExtensions)}.{nameof(AddCustomMvc)}",
+						new LogItem("Event",
+							$"Adding authorization policy. Name: '{authorizationPolicy.Key}', Policy: {JsonConvert.SerializeObject(authorizationPolicy.Value)}"));
 					configure.AddPolicy(authorizationPolicy.Key, authorizationPolicy.Value);
 				}
 			});
@@ -82,11 +90,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return services;
 		}
 
-		internal static IServiceCollection AddCustomCors(this IServiceCollection services, StartupOptions startupOptions, ILogger logger)
+		internal static IServiceCollection AddCustomCors(this IServiceCollection services,
+			StartupOptions startupOptions, ILogger logger)
 		{
-	        logger.Info("AddCustomCors", new LogItem("FoundCustomCorsPolicies", startupOptions.CorsPolicies.Count));
+			logger.Info("AddCustomCors", new LogItem("FoundCustomCorsPolicies", startupOptions.CorsPolicies.Count));
 
-	        services.AddCors(options =>
+			services.AddCors(options =>
 			{
 				foreach (var corsPolicy in startupOptions.CorsPolicies)
 				{
@@ -99,21 +108,24 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			return services;
 		}
 
-		internal static IServiceCollection AddSwagger(this IServiceCollection services, AssemblyName entryAssemblyName, StartupOptions startupOptions)
+		internal static IServiceCollection AddSwagger(this IServiceCollection services, AssemblyName entryAssemblyName,
+			StartupOptions startupOptions)
 		{
 			services.AddSwaggerGen(c =>
 			{
 				c.DocumentFilter<HealthCheckDocumentFilter>();
 				c.OperationFilter<CustomTagOperationFilter>();
 				c.SchemaFilter<SwaggerIgnoreSchemaFilter>();
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString() });
+				c.OperationFilter<HybridOperationFilter>();
+				c.SwaggerDoc("v1",
+					new OpenApiInfo {Title = entryAssemblyName.Name, Version = entryAssemblyName.Version.ToString()});
 
 				foreach (var operationFilter in startupOptions.SwaggerOperationFilters)
 				{
 					c.OperationFilterDescriptors.Add(new FilterDescriptor()
 					{
 						Type = operationFilter,
-						Arguments = new object[] {}
+						Arguments = new object[] { }
 					});
 				}
 
@@ -122,7 +134,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 					c.SchemaFilterDescriptors.Add(new FilterDescriptor()
 					{
 						Type = schemaFilter,
-						Arguments = new object[]{}
+						Arguments = new object[] { }
 					});
 				}
 
@@ -141,13 +153,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 						}
 					});
 				}
-				
+
 				var xmlPath = Path.Combine(AppContext.BaseDirectory, $"{entryAssemblyName.Name}.xml");
 
 				if (File.Exists(xmlPath))
 				{
 					c.IncludeXmlComments(xmlPath);
 				}
+				
 			});
 
 			return services;
@@ -155,12 +168,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 		internal static IServiceProvider AddStructureMap(this IServiceCollection services, IContainer container)
 		{
-			container.Configure(config =>
-			{
-				config.Populate(services);
-			});
+			container.Configure(config => { config.Populate(services); });
 
 			return container.GetInstance<IServiceProvider>();
 		}
+
 	}
 }

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Internal;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rook.Framework.Core.HttpServerAspNet
@@ -13,11 +18,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		public FilterCollection Filters { get; } = new FilterCollection();
 		public AuthorizationPolicyCollection AuthorizationPolicies { get; } = new AuthorizationPolicyCollection();
 		public List<Type> SwaggerOperationFilters { get; } = new List<Type>();
-		
 		public List<Type> SwaggerSchemaFilters { get; } = new List<Type>();
 		public IList<Type> AuthorizationHandlers { get; } = new List<Type>();
 		public CorsPolicyCollection CorsPolicies { get; } = new CorsPolicyCollection();
-		public IList<Assembly> MvcApplicationPartAssemblies{ get; } = new List<Assembly> { Assembly.GetEntryAssembly() };
+		public IList<Assembly> MvcApplicationPartAssemblies { get; } = new List<Assembly> {Assembly.GetEntryAssembly()};
 		public IdentityServerOptions IdentityServerOptions { get; } = new IdentityServerOptions();
 	}
 

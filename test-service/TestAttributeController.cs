@@ -1,3 +1,5 @@
+using System;
+using HybridModelBinding;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Rook.Framework.Core.HttpServerAspNet;
@@ -6,7 +8,7 @@ using testService;
 namespace Rook.Framework.Core.HttpServerAspNet
 {
 [Produces("application/json")]
-[Route("testAttr/{Id}")]
+[Route("testAttr/{IntroducerId}/somethingelse")]
 [ApiController]
 public class TestAttributeController : ControllerBase
 {
@@ -18,9 +20,9 @@ public class TestAttributeController : ControllerBase
 	/// <response code="400">If a bad request is sent to the method</response>
 	[HttpPost]
 	[SwaggerTag("TEST Attribute")]
-	public string Post(TestRequest req)
+	public string Post([FromHybrid] TestRequest req)
 	{
-		req.Id = int.Parse(ControllerContext.RouteData.Values["Id"].ToString());
+		//req.IntroducerId = Guid.Parse(ControllerContext.RouteData.Values["IntroducerId"].ToString());
 		
 		return JsonConvert.SerializeObject(req);
 	}
