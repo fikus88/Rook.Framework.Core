@@ -73,10 +73,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 							paramsHandled--;
 							paramSet = true;
 						}
-
-						if (!paramSet)
-							paramsHandled -=
-								!propertyInfo.GetCustomAttributes(typeof(SwaggerIgnoreAttribute)).Any() ? 0 : 1;
 					}
 
 					if (paramsHandled != 0)
