@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using HybridModelBinding;
 
 namespace Rook.Framework.Core.HttpServerAspNet
@@ -18,15 +19,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 			var excludedProperties = context.Type.GetProperties()
 				.Where(t =>
-					t.GetCustomAttribute<HybridBindPropertyAttribute>()
-					!= null);
+					t.GetCustomAttribute<HybridBindPropertyAttribute>() is HybridBindPropertyAttribute
+						customAttribute && customAttribute.ValueProviders.All(y => y != Source.Body));
 
 			foreach (var excludedProperty in excludedProperties)
 			{
-				
 				var excludedPropCamelCaseNameArr = excludedProperty.Name.ToCharArray();
 				var excludedPropCamelCaseName = "";
-				
+
 				for (int i = 0; i < excludedPropCamelCaseNameArr.Length; i++)
 				{
 					var currentChar = excludedPropCamelCaseNameArr[i].ToString();

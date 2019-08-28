@@ -42,7 +42,9 @@ namespace Rook.Framework.Core.HttpServerAspNet
 						var paramSet = false;
 
 						foreach (var attribute in propertyInfo.GetCustomAttributes(typeof(HybridBindPropertyAttribute))
-							.ToList())
+							.ToList().Where(x =>
+								x is HybridBindPropertyAttribute hybridBindPropertyAttribute &&
+								hybridBindPropertyAttribute.ValueProviders.All(y => y != Source.Body)).ToList())
 						{
 							var thisPropSchema = context.SchemaGenerator.GenerateSchema(propertyInfo.PropertyType,
 								context.SchemaRepository);

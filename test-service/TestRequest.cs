@@ -12,6 +12,7 @@ namespace testService
 		[HybridBindProperty(Source.Route)]
 		public Guid IntroducerId { get; set; }
 
+		[HybridBindProperty(Source.Body)]
 		public string Name { get; set; }
 
 		public string Desc { get; set; }
