@@ -32,17 +32,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			{
 				if (hybridParameter != null && hybridParameter.name == operation.Parameters[i].Name)
 				{
-					var name = operation.Parameters[i].Name;
-					var isRequired = operation.Parameters[i].Required;
-
 					operation.Parameters.Clear();
 
 					foreach (var propertyInfo in hybridParameter.type.GetProperties())
 					{
-						var paramSet = false;
-
 						foreach (var attribute in propertyInfo.GetCustomAttributes(typeof(HybridBindPropertyAttribute))
-							.ToList())
+							.ToList().Where(x =>
+								x is HybridBindPropertyAttribute hybridBindPropertyAttribute &&
+								hybridBindPropertyAttribute.ValueProviders.All(y => y != Source.Body)).ToList())
 						{
 							var thisPropSchema = context.SchemaGenerator.GenerateSchema(propertyInfo.PropertyType,
 								context.SchemaRepository);
@@ -71,12 +68,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 							operation.Parameters.Insert(0, apiParam);
 							paramsHandled--;
-							paramSet = true;
 						}
-
-						if (!paramSet)
-							paramsHandled -=
-								!propertyInfo.GetCustomAttributes(typeof(SwaggerIgnoreAttribute)).Any() ? 0 : 1;
 					}
 
 					if (paramsHandled != 0)
