@@ -88,20 +88,20 @@ namespace Rook.Framework.Core.Tests.Unit.Swashbuckle
 		[InlineData(typeof(TestRequest2), 0, true, 2, 1)]
 		[InlineData(typeof(TestRequest3), 0, true, 0, 0)]
 		[InlineData(typeof(TestRequest4), 0, false, 5, 0)]
-		public void ParametersSourcesAreValid(Type param, int RouteParamsCount, bool BodyParamsRendered,
-			int QueryParamsCount, int HeaderParamsCount)
+		public void ParametersSourcesAreValid(Type param, int routeParamsCount, bool bodyParamsRendered,
+			int queryParamsCount, int headerParamsCount)
 		{
 			var filterContext = FilterContextFor(nameof(TestAttributeController.Post), param, out var operation);
 
 			Subject().Apply(operation, filterContext);
 
-			Assert.Equal(RouteParamsCount, operation.Parameters.Count(x => x.In == ParameterLocation.Path));
-			Assert.Equal(BodyParamsRendered, operation.RequestBody != null);
-			Assert.Equal(QueryParamsCount, operation.Parameters.Count(x => x.In == ParameterLocation.Query));
-			Assert.Equal(HeaderParamsCount, operation.Parameters.Count(x => x.In == ParameterLocation.Header));
+			Assert.Equal(routeParamsCount, operation.Parameters.Count(x => x.In == ParameterLocation.Path));
+			Assert.Equal(bodyParamsRendered, operation.RequestBody != null);
+			Assert.Equal(queryParamsCount, operation.Parameters.Count(x => x.In == ParameterLocation.Query));
+			Assert.Equal(headerParamsCount, operation.Parameters.Count(x => x.In == ParameterLocation.Header));
 		}
 
-		private OperationFilterContext FilterContextFor(string fakeActionName, Type param,
+		private OperationFilterContext FilterContextFor(string actionName, Type param,
 			out OpenApiOperation operation)
 		{
 			var apiDescription = new ApiDescription
@@ -109,12 +109,10 @@ namespace Rook.Framework.Core.Tests.Unit.Swashbuckle
 				ActionDescriptor = new ControllerActionDescriptor
 				{
 					ControllerTypeInfo = typeof(TestAttributeController).GetTypeInfo(),
-					MethodInfo = typeof(TestAttributeController).GetMethod(fakeActionName)
+					MethodInfo = typeof(TestAttributeController).GetMethod(actionName)
 				}
 			};
-
-			apiDescription.TryGetMethodInfo(out var methInfo);
-
+			
 			operation = new OpenApiOperation();
 
 			apiDescription.ParameterDescriptions.Add(new ApiParameterDescription()

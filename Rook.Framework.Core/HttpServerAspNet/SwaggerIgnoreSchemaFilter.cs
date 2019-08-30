@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using HybridModelBinding;
+using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {
@@ -19,23 +20,14 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 			var excludedProperties = context.Type.GetProperties()
 				.Where(t =>
-					t.GetCustomAttribute<HybridBindPropertyAttribute>() is HybridBindPropertyAttribute
-						customAttribute && customAttribute.ValueProviders.All(y => y != Source.Body));
+					(t.GetCustomAttribute<HybridBindPropertyAttribute>() is HybridBindPropertyAttribute
+						 customAttribute && customAttribute.ValueProviders.All(y => y != Source.Body)) ||
+					t.GetCustomAttribute<SwaggerIgnoreAttribute>() != null);
 
 			foreach (var excludedProperty in excludedProperties)
 			{
-				var excludedPropCamelCaseNameArr = excludedProperty.Name.ToCharArray();
-				var excludedPropCamelCaseName = "";
-
-				for (int i = 0; i < excludedPropCamelCaseNameArr.Length; i++)
-				{
-					var currentChar = excludedPropCamelCaseNameArr[i].ToString();
-
-					excludedPropCamelCaseName += i == 0 ? currentChar.ToLower() : currentChar;
-				}
-
-				if (schema.Properties.ContainsKey(excludedPropCamelCaseName)) ;
-				schema.Properties.Remove(excludedPropCamelCaseName);
+				if (schema.Properties.ContainsKey(excludedProperty.Name.ToCamelCase())) ;
+				schema.Properties.Remove(excludedProperty.Name.ToCamelCase());
 			}
 		}
 	}

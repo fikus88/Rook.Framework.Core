@@ -32,15 +32,10 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			{
 				if (hybridParameter != null && hybridParameter.name == operation.Parameters[i].Name)
 				{
-					var name = operation.Parameters[i].Name;
-					var isRequired = operation.Parameters[i].Required;
-
 					operation.Parameters.Clear();
 
 					foreach (var propertyInfo in hybridParameter.type.GetProperties())
 					{
-						var paramSet = false;
-
 						foreach (var attribute in propertyInfo.GetCustomAttributes(typeof(HybridBindPropertyAttribute))
 							.ToList().Where(x =>
 								x is HybridBindPropertyAttribute hybridBindPropertyAttribute &&
@@ -73,7 +68,6 @@ namespace Rook.Framework.Core.HttpServerAspNet
 
 							operation.Parameters.Insert(0, apiParam);
 							paramsHandled--;
-							paramSet = true;
 						}
 					}
 
