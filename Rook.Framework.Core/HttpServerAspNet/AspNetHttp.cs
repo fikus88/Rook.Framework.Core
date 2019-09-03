@@ -95,7 +95,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 		{
 			_logger.Info("Stopping ASP.NET Web Host");
 			cts.Cancel();
-			_webHost.StopAsync(_allocationCancellationToken);
+			_webHost?.StopAsync(_allocationCancellationToken);
 			_logger.Info("ASP.NET Web Host Stopped");
 		}
 	}
