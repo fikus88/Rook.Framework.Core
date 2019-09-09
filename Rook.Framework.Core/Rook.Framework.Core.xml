@@ -705,6 +705,21 @@
             Returns the filename of the executable without its extension.
             </summary>
         </member>
+        <member name="T:Rook.Framework.Core.HttpServerAspNet.SwaggerIgnoreAttribute">
+            <summary>
+            Ignore property in request body
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServerAspNet.SwaggerIgnoreSchemaFilter">
+            <summary>
+            Applies filter to schema of the Swagger documentation request body
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServerAspNet.SwaggerTagAttribute">
+            <summary>
+            Ignore property in request body
+            </summary>
+        </member>
         <member name="P:Rook.Framework.Core.HttpServer.EmptyHttpContent.Headers">
             <summary>
             No additional headers required when no content
