@@ -178,7 +178,7 @@ namespace Rook.Framework.Core.Application.Bus
 
 			IModel model = _channelCache.GetNextAvailableChannel();
 
-			_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage, message.Uuid.ToString());
+			_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage);
 
 			model.BasicPublish(QueueConstants.ExchangeName, SelectedRoutingKey, true, null,
 				Encoding.UTF8.GetBytes(serializedMessage));

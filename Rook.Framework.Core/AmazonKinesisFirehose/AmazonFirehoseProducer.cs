@@ -22,7 +22,7 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 			_kinesisProducer = new KinesisProducer(conf);
 		}
 
-		public UserRecordResult PutRecord(string json, string messageId, string streamName)
+		public UserRecordResult PutRecord(string json, string streamName)
 		{
 			var rec = new UserRecord(streamName, ServiceInfo.Name,
 				json.ToBytes());
