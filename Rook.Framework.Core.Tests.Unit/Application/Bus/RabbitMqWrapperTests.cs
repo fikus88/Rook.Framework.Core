@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RabbitMQ.Client;
+using Rook.Framework.Core.AmazonKinesisFirehose;
 using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Application.Message;
 using Rook.Framework.Core.Common;
@@ -77,7 +78,8 @@ namespace Rook.Framework.Core.Tests.Unit.Application.Bus
                 _mockLogger.Object,
                 _mockConfigurationManager.Object,
                 _mockConnectionFactory.Object,
-                _mockServiceMetrics.Object);
+                _mockServiceMetrics.Object,
+                new Mock<IAmazonFirehoseProducer>().Object);
         }
     }
 }

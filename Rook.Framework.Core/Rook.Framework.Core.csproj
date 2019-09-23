@@ -18,8 +18,8 @@
     <PackageProjectUrl>https://github.com/rookframework/Rook.Documentation</PackageProjectUrl>
     <PackageIconUrl>https://github.com/rookframework/Rook.Documentation/blob/master/rook.png?raw=true</PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2019.9.9.55</AssemblyVersion>
-    <Version>2019.9.9.55</Version>
+    <AssemblyVersion>2019.9.23.57</AssemblyVersion>
+    <Version>2019.9.23.57</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>Rook.Framework.Core.xml</DocumentationFile>
@@ -35,8 +35,14 @@
     </DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Core" Version="3.3.103.36" />
+    <PackageReference Include="AWSSDK.Kinesis" Version="3.3.100.72" />
+    <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.3.100.72" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
     <PackageReference Include="kafka-core" Version="0.9.1" />
+    <PackageReference Include="KinesisProducerNet" Version="0.12.8" />
+    <PackageReference Include="KinesisProducerNet.Linux" Version="0.12.8" />
+    <PackageReference Include="KinesisProducerNet.Windows" Version="0.12.8" />
     <PackageReference Include="MAB.HybridModelBinding" Version="0.15.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
@@ -46,6 +52,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="2.2.5" />
+    <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="prometheus-net" Version="2.1.3" />
     <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />

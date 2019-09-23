@@ -5,5 +5,7 @@
 	"Port": 8500,
 	"EnableSubdomainCorsPolicy": true,
 	"HttpServerType": "AspNetHttp",
-	"AllowedSubdomainCorsPolicyOrigins": "http://*.*.mab-development.co.uk:4200"
+	"AllowedSubdomainCorsPolicyOrigins": "http://*.*.mab-development.co.uk:4200",
+	"MessageKinesisStream": "MAB.Dev.Platform.MessageKinesisStream",
+	"RepositoryKinesisStream" : "MAB.Dev.Platform.RepositoryKinesisStream"
 }

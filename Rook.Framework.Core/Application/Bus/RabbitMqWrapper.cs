@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Rook.Framework.Core.AmazonKinesisFirehose;
 using Rook.Framework.Core.Application.Message;
 using Rook.Framework.Core.Common;
 using Rook.Framework.Core.Monitoring;
@@ -12,178 +13,194 @@ using Rook.Framework.Core.Services;
 
 namespace Rook.Framework.Core.Application.Bus
 {
-    public sealed class RabbitMqWrapper : IQueueWrapper, IDisposable, IStartStoppable
-    {
-        internal readonly string QueueName;
-        private readonly bool _autoAck;
-        private readonly bool _durable;
+	public sealed class RabbitMqWrapper : IQueueWrapper, IDisposable, IStartStoppable
+	{
+		internal readonly string QueueName;
+		private readonly bool _autoAck;
+		private readonly bool _durable;
 
-        internal readonly ILogger Logger;
-        private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IServiceMetrics _serviceMetrics;
-        private readonly ushort _maximumConcurrency;
+		internal readonly ILogger Logger;
+		private readonly IDateTimeProvider _dateTimeProvider;
+		private readonly IServiceMetrics _serviceMetrics;
+		private readonly ushort _maximumConcurrency;
+		private readonly IAmazonFirehoseProducer _amazonFirehoseProducer;
+		private readonly string _amazonKinesisStreamName;
 
-        private string SelectedRoutingKey { get; set; }
-        internal IModel Model { get; set; }
+		private string SelectedRoutingKey { get; set; }
+		internal IModel Model { get; set; }
 
-        private readonly ChannelCache _channelCache;
+		private readonly ChannelCache _channelCache;
 
-        public RabbitMqWrapper(
-            IDateTimeProvider dateTimeProvider,
-            ILogger logger,
-            IConfigurationManager configurationManager,
-            IRabbitMqConnectionManager connectionManager,
-            IServiceMetrics serviceMetrics)
-        {
-            Logger = logger;
-            _dateTimeProvider = dateTimeProvider;
-            _serviceMetrics = serviceMetrics;
+		public RabbitMqWrapper(
+			IDateTimeProvider dateTimeProvider,
+			ILogger logger,
+			IConfigurationManager configurationManager,
+			IRabbitMqConnectionManager connectionManager,
+			IServiceMetrics serviceMetrics,
+			IAmazonFirehoseProducer amazonFirehoseProducer)
+		{
+			Logger = logger;
+			_dateTimeProvider = dateTimeProvider;
+			_serviceMetrics = serviceMetrics;
+			_amazonFirehoseProducer = amazonFirehoseProducer;
+			QueueName = ServiceInfo.QueueName;
 
-            QueueName = ServiceInfo.QueueName;
+			// AutoAck is the opposite of AcknowledgeAfterProcessing
+			// AcknowledgeAfterProcessing will ack the message after it's been processed,
+			// while AutoAck (AcknowledgeAfterProcessing=False) will ack the message after it's
+			// been pulled from the queue.
+			_autoAck = !configurationManager.Get<bool>("AcknowledgeAfterProcessing", true);
 
-            // AutoAck is the opposite of AcknowledgeAfterProcessing
-            // AcknowledgeAfterProcessing will ack the message after it's been processed,
-            // while AutoAck (AcknowledgeAfterProcessing=False) will ack the message after it's
-            // been pulled from the queue.
-            _autoAck = !configurationManager.Get<bool>("AcknowledgeAfterProcessing", true);
-            
-            _durable = configurationManager.Get<bool>("QueueIsDurable", true);
+			_durable = configurationManager.Get<bool>("QueueIsDurable", true);
 
-            _maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
+			_amazonKinesisStreamName = configurationManager.Get<string>("MessageKinesisStream");
 
-            _channelCache = new ChannelCache(connectionManager, Logger, QueueConstants.ExchangeName, ExchangeType.Topic, true, () => _serviceMetrics.RecordNewMainChannel());
-        }
+			_maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+			_channelCache = new ChannelCache(connectionManager, Logger, QueueConstants.ExchangeName, ExchangeType.Topic,
+				true, () => _serviceMetrics.RecordNewMainChannel());
+		}
 
-        public void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _channelCache.Dispose();
+		public void Dispose()
+		{
+			Dispose(true);
+		}
 
-                Model?.Close();
-                Model?.Dispose();
-                Model = null;
-            }
-        }
+		public void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				_channelCache.Dispose();
 
-        public StartupPriority StartupPriority { get; } = StartupPriority.High;
-        public void Start()
-        {
-            Start(QueueConstants.DefaultRoutingKey);
-        }
+				Model?.Close();
+				Model?.Dispose();
+				Model = null;
+			}
+		}
 
-        public void Start(string topic)
-        {
-            SelectedRoutingKey = topic;
+		public StartupPriority StartupPriority { get; } = StartupPriority.High;
 
-            if (Model != null) return;
+		public void Start()
+		{
+			Start(QueueConstants.DefaultRoutingKey);
+		}
 
-            Model = _channelCache.CreateChannel();
+		public void Start(string topic)
+		{
+			SelectedRoutingKey = topic;
 
-            if (_maximumConcurrency > 0)
-            {
-                Model.BasicQos(0, _maximumConcurrency, false);
-            }
+			if (Model != null) return;
 
-            if (!string.IsNullOrWhiteSpace(QueueName))
-            {
-                Logger.Info($"Declaring & Binding to Queue {QueueName}...");
-                Model.QueueDeclare(QueueName, _durable, false, false);
-                Model.QueueBind(QueueName, QueueConstants.ExchangeName, SelectedRoutingKey);
-            }
-        }
+			Model = _channelCache.CreateChannel();
 
-        public void Stop() => Dispose();
+			if (_maximumConcurrency > 0)
+			{
+				Model.BasicQos(0, _maximumConcurrency, false);
+			}
 
-        public string StartMessageConsumer(AsyncEventHandler<BasicDeliverEventArgs> consumeMessageHandler)
-        {
-            if (Model == null) throw new RabbitMqWrapperException($"{nameof(RabbitMqWrapper)}.{nameof(Start)} must be run before calling {nameof(StartMessageConsumer)}");
+			if (!string.IsNullOrWhiteSpace(QueueName))
+			{
+				Logger.Info($"Declaring & Binding to Queue {QueueName}...");
+				Model.QueueDeclare(QueueName, _durable, false, false);
+				Model.QueueBind(QueueName, QueueConstants.ExchangeName, SelectedRoutingKey);
+			}
+		}
 
-            var consumer = new AsyncEventingBasicConsumer(Model);
-            consumer.Received += async (sender,@event) => { await consumeMessageHandler(sender, @event); };
+		public void Stop() => Dispose();
 
-            var consumerTag = Model.BasicConsume(QueueName, _autoAck, consumer);
-            
-            Logger.Trace($"{nameof(RabbitMqWrapper)}.{nameof(StartMessageConsumer)}", new LogItem("Event", "Message handler subscribed to queue"),
-                new LogItem("QueueName", QueueName),
-                new LogItem("ConsumerTag", consumerTag),
-                new LogItem("HandlerMethod", () => consumeMessageHandler.GetMethodInfo().Name));
-            return consumerTag;
-        }
+		public string StartMessageConsumer(AsyncEventHandler<BasicDeliverEventArgs> consumeMessageHandler)
+		{
+			if (Model == null)
+				throw new RabbitMqWrapperException(
+					$"{nameof(RabbitMqWrapper)}.{nameof(Start)} must be run before calling {nameof(StartMessageConsumer)}");
 
-        public void StopMessageConsumer(string consumerTag)
-        {
-            if (Model == null)
-            {
-                Logger.Warn(
-                    $"{nameof(RabbitMqWrapper)}.{nameof(Start)} must be run before calling {nameof(StopMessageConsumer)}");
-                return;
-            }
+			var consumer = new AsyncEventingBasicConsumer(Model);
+			consumer.Received += async (sender, @event) => { await consumeMessageHandler(sender, @event); };
 
-            if (!string.IsNullOrWhiteSpace(consumerTag))
-            {
-                lock (Model)
-                    Model.BasicCancel(consumerTag);
-                Logger.Trace($"{nameof(RabbitMqWrapper)}.{nameof(StopMessageConsumer)}",
-                    new LogItem("Event", "Message handler unsubscribed from queue"),
-                    new LogItem("QueueName", QueueName),
-                    new LogItem("ConsumerTag", consumerTag));
-            }
-        }
+			var consumerTag = Model.BasicConsume(QueueName, _autoAck, consumer);
 
-        public void RejectMessage(BasicDeliverEventArgs eventDetails)
-        {
-            if (!_autoAck)
-                lock (Model)
-                    Model.BasicReject(eventDetails.DeliveryTag, false);
-        }
+			Logger.Trace($"{nameof(RabbitMqWrapper)}.{nameof(StartMessageConsumer)}",
+				new LogItem("Event", "Message handler subscribed to queue"),
+				new LogItem("QueueName", QueueName),
+				new LogItem("ConsumerTag", consumerTag),
+				new LogItem("HandlerMethod", () => consumeMessageHandler.GetMethodInfo().Name));
+			return consumerTag;
+		}
 
-        public void AcknowledgeMessage(BasicDeliverEventArgs eventDetails)
-        {
-            if (!_autoAck)
-                lock (Model)
-                    Model.BasicAck(eventDetails.DeliveryTag, false);
-        }
-        
-        public void PublishMessage<TNeed, TSolution>(Message<TNeed, TSolution> message, Guid uuid = default)
-        {
-            if (message.Source == null)
-                message.Source = ServiceInfo.Name;
+		public void StopMessageConsumer(string consumerTag)
+		{
+			if (Model == null)
+			{
+				Logger.Warn(
+					$"{nameof(RabbitMqWrapper)}.{nameof(Start)} must be run before calling {nameof(StopMessageConsumer)}");
+				return;
+			}
 
-            if (uuid == Guid.Empty) uuid = Guid.NewGuid();
+			if (!string.IsNullOrWhiteSpace(consumerTag))
+			{
+				lock (Model)
+					Model.BasicCancel(consumerTag);
+				Logger.Trace($"{nameof(RabbitMqWrapper)}.{nameof(StopMessageConsumer)}",
+					new LogItem("Event", "Message handler unsubscribed from queue"),
+					new LogItem("QueueName", QueueName),
+					new LogItem("ConsumerTag", consumerTag));
+			}
+		}
 
-            message.LastModifiedBy = ServiceInfo.Name;
-            message.LastModifiedTime = _dateTimeProvider.UtcNow;
-            message.Uuid = uuid;
-            message.PublishedTime = _dateTimeProvider.UtcNow;
+		public void RejectMessage(BasicDeliverEventArgs eventDetails)
+		{
+			if (!_autoAck)
+				lock (Model)
+					Model.BasicReject(eventDetails.DeliveryTag, false);
+		}
 
-            string serializedMessage = JsonConvert.SerializeObject(message, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+		public void AcknowledgeMessage(BasicDeliverEventArgs eventDetails)
+		{
+			if (!_autoAck)
+				lock (Model)
+					Model.BasicAck(eventDetails.DeliveryTag, false);
+		}
 
-            IModel model = _channelCache.GetNextAvailableChannel();
+		public void PublishMessage<TNeed, TSolution>(Message<TNeed, TSolution> message, Guid uuid = default)
+		{
+			if (message.Source == null)
+				message.Source = ServiceInfo.Name;
 
-            model.BasicPublish(QueueConstants.ExchangeName, SelectedRoutingKey, true, null, Encoding.UTF8.GetBytes(serializedMessage));
+			if (uuid == Guid.Empty) uuid = Guid.NewGuid();
 
-            _channelCache.ReleaseChannel(model);
+			message.LastModifiedBy = ServiceInfo.Name;
+			message.LastModifiedTime = _dateTimeProvider.UtcNow;
+			message.Uuid = uuid;
+			message.PublishedTime = _dateTimeProvider.UtcNow;
 
-            Logger.Trace($"{nameof(RabbitMqWrapper)}.{nameof(PublishMessage)}",
-                new LogItem("Event", "Message published"),
-                new LogItem("Message", serializedMessage),
-                new LogItem("Topic", SelectedRoutingKey),
-                new LogItem("MessageId", uuid.ToString));
+			string serializedMessage = JsonConvert.SerializeObject(message,
+				new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
 
-            _serviceMetrics.RecordPublishedMessage();
-        }
+			IModel model = _channelCache.GetNextAvailableChannel();
 
-        public uint MessageCount(string queueName)
-        {
-            if (Model == null) throw new RabbitMqWrapperException($"{nameof(RabbitMqWrapper)}.{nameof(Start)} must be run before calling {nameof(PublishMessage)}");
+			_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage, message.Uuid.ToString());
 
-            return Model.MessageCount(queueName);
-        }
-    }
+			model.BasicPublish(QueueConstants.ExchangeName, SelectedRoutingKey, true, null,
+				Encoding.UTF8.GetBytes(serializedMessage));
+
+			_channelCache.ReleaseChannel(model);
+
+			Logger.Trace($"{nameof(RabbitMqWrapper)}.{nameof(PublishMessage)}",
+				new LogItem("Event", "Message published"),
+				new LogItem("Message", serializedMessage),
+				new LogItem("Topic", SelectedRoutingKey),
+				new LogItem("MessageId", uuid.ToString));
+
+			_serviceMetrics.RecordPublishedMessage();
+		}
+
+		public uint MessageCount(string queueName)
+		{
+			if (Model == null)
+				throw new RabbitMqWrapperException(
+					$"{nameof(RabbitMqWrapper)}.{nameof(Start)} must be run before calling {nameof(PublishMessage)}");
+
+			return Model.MessageCount(queueName);
+		}
+	}
 }
