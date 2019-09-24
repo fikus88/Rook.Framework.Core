@@ -30,13 +30,12 @@ public class TestKinesisFirehoseController : ControllerBase
 	/// <response code="400">If a bad request is sent to the method</response>
 	[HttpPost]
 	[SwaggerTag("Kinesis Firehose")]
-	public string Post(TestFirehoseRequest req)
+	public string Post(FirehoseDataSampleNeed req)
 	{
-		//req.IntroducerId = Guid.Parse(ControllerContext.RouteData.Values["IntroducerId"].ToString());
-
+		
 		var msg =_requestStore.PublishAndWaitForTypedResponse(new Message<FirehoseDataSampleNeed, bool>()
 		{
-			Need = new FirehoseDataSampleNeed(),
+			Need = req,
 			Method = "FirehoseKinesisTest"
 		});
 		

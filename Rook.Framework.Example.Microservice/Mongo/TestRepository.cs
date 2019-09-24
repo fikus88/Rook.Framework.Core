@@ -14,7 +14,7 @@ namespace Rook.Framework.Example.Microservice.Mongo
 
 		public Guid Put<T>(T entity) where T : DataEntity
 		{
-			_mongoStore.Put(entity);
+			_mongoStore.Put(entity, dataEntity => (Guid) dataEntity.Id == (Guid) entity.Id);
 
 			return (Guid) entity.Id;
 		}
