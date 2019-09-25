@@ -6,7 +6,7 @@ using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.AmazonKinesisFirehose
 {
-	public class AmazonFirehoseProducer : IAmazonFirehoseProducer, IDisposable
+	public class AmazonFirehoseProducer : IAmazonFirehoseProducer
 	{
 
 		private readonly KinesisProducer _kinesisProducer;
@@ -23,17 +23,12 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 			
 		}
 
-		public UserRecordResult PutRecord(string streamName, string json)
+		public void PutRecord(string streamName, string json)
 		{
 			var rec = new UserRecord(streamName, ServiceInfo.Name,
 				json.ToBytes());
 
-			return _kinesisProducer.AddUserRecord(rec).Task.Result;
-		}
-
-		public void Dispose()
-		{
-			_kinesisProducer.Destroy();
+			_kinesisProducer.AddUserRecord(rec);
 		}
 	}
 }

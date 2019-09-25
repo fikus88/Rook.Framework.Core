@@ -4,7 +4,7 @@ namespace testService
 {
 	public class FirehoseDataSampleNeed
 	{
-		public Guid Id { get; set; }
+		public int IdInt { get; set; }
 		public string Name { get; set; }
 	}
 }

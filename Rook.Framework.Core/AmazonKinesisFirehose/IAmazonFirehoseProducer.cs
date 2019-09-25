@@ -13,6 +13,6 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 		/// <param name="streamName">Kinesis Stream Name</param>
 		/// <param name="json">message</param>
 		/// <returns></returns>
-		UserRecordResult PutRecord(string streamName, string json);
+		void PutRecord(string streamName, string json);
 	}
 }

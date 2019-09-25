@@ -29,14 +29,16 @@ namespace Rook.Framework.Example.Microservice.MessageHandlers
 
 	public class FirehoseDataSampleNeed
 	{
-		public Guid Id { get; set; }
+		public int IdInt { get; set; }
+		
+		
 		public string Name { get; set; }
 
 		public FirehoseDataSample ToFirehoseDataSample()
 		{
 			return new FirehoseDataSample()
 			{
-				Id = Id == Guid.Empty ? Guid.NewGuid() : Id,
+				IdInt = IdInt,
 				Name = Name
 			};
 		}
