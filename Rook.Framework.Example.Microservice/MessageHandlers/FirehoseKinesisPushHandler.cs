@@ -21,7 +21,9 @@ namespace Rook.Framework.Example.Microservice.MessageHandlers
 		{
 			message.Solution = new[] {true};
 
-			_testRepository.Put(message.Need.ToFirehoseDataSample());
+			
+			
+			_testRepository.Put(message.Need.ToFirehoseDataSample(_testRepository.GetHighest()));
 
 			return CompletionAction.Republish;
 		}
@@ -34,11 +36,11 @@ namespace Rook.Framework.Example.Microservice.MessageHandlers
 		
 		public string Name { get; set; }
 
-		public FirehoseDataSample ToFirehoseDataSample()
+		public FirehoseDataSample ToFirehoseDataSample( int CurrentCount)
 		{
 			return new FirehoseDataSample()
 			{
-				IdInt = IdInt,
+				IdInt = CurrentCount + 1,
 				Name = Name
 			};
 		}
