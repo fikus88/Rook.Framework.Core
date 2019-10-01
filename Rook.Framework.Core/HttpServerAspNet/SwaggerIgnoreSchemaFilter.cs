@@ -3,8 +3,8 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using HybridModelBinding;
 using Rook.Framework.Core.Common;
+using Rook.Framework.Core.HttpServerAspNet.ModelBinding;
 
 namespace Rook.Framework.Core.HttpServerAspNet
 {

@@ -1,8 +1,8 @@
 using System;
-using HybridModelBinding;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Rook.Framework.Core.HttpServerAspNet;
+using Rook.Framework.Core.HttpServerAspNet.ModelBinding;
 using testService;
 
 namespace Rook.Framework.Core.HttpServerAspNet

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using HybridModelBinding;
 using Microsoft.OpenApi.Models;
 using Rook.Framework.Core.HttpServerAspNet;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
+using Rook.Framework.Core.HttpServerAspNet.ModelBinding;
 using Xunit;
 
 namespace Rook.Framework.Core.Tests.Unit.Swashbuckle

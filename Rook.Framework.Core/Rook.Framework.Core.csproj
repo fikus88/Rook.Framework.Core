@@ -44,7 +44,6 @@
     <PackageReference Include="KinesisProducerNet" Version="0.12.8" />
     <PackageReference Include="KinesisProducerNet.Linux" Version="0.12.8" />
     <PackageReference Include="KinesisProducerNet.Windows" Version="0.12.8" />
-    <PackageReference Include="MAB.HybridModelBinding" Version="0.15.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
