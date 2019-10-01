@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <DisableImplicitAssetTargetFallback>true</DisableImplicitAssetTargetFallback>
     <Configurations>Debug;Release;Experimental</Configurations>
     <Platforms>AnyCPU</Platforms>
@@ -17,9 +17,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rook.Framework.Core\Rook.Framework.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Rook.Framework.MongoDb, Version=2019.10.1.7, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\Rook.Framework.MongoDb\Rook.Framework.MongoDb\bin\Debug\netcoreapp2.0\Rook.Framework.MongoDb.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -7,4 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DummyMicroserviceCore\DummyMicroserviceCore.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
+  </ItemGroup>
 </Project>

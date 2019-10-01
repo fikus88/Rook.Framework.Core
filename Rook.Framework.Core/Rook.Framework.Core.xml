@@ -1,0 +1,1099 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Rook.Framework.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Rook.Framework.Core.AmazonKinesisFirehose.IAmazonFirehoseProducer">
+            <summary>
+            Amazon Kinesis Firehose Wrapper
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.AmazonKinesisFirehose.IAmazonFirehoseProducer.PutRecord(System.String,System.String)">
+            <summary>
+            Method to put record into Kinesis stream
+            </summary>
+            <param name="streamName">Kinesis Stream Name</param>
+            <param name="json">message</param>
+            <returns></returns>
+        </member>
+        <member name="T:Rook.Framework.Core.AnalyticsPump.ErrorCode">
+            <summary>
+                Enumeration of local and broker generated error codes.
+            </summary>
+            <remarks>
+                Error codes that relate to locally produced errors in 
+                librdkafka are prefixed with Local_
+            </remarks>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_BadMsg">
+            <summary>
+                Received message is incorrect
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_BadCompression">
+            <summary>
+                Bad/unknown compression
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Destroy">
+            <summary>
+                Broker is going away
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Fail">
+            <summary>
+                Generic failure
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Transport">
+            <summary>
+                Broker transport failure
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_CritSysResource">
+            <summary>
+                Critical system resource
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Resolve">
+            <summary>
+                Failed to resolve broker
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_MsgTimedOut">
+            <summary>
+                Produced message timed out
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_PartitionEOF">
+            <summary>
+                Reached the end of the topic+partition queue on the broker. Not really an error.
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_UnknownPartition">
+            <summary>
+                Permanent: Partition does not exist in cluster.
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_FS">
+            <summary>
+                File or filesystem error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_UnknownTopic">
+            <summary>
+                Permanent: Topic does not exist in cluster.
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_AllBrokersDown">
+            <summary>
+                All broker connections are down.
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_InvalidArg">
+            <summary>
+                Invalid argument, or invalid configuration
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_TimedOut">
+            <summary>
+                Operation timed out
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_QueueFull">
+            <summary>
+                Queue is full
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_IsrInsuff">
+            <summary>
+                ISR count &lt; required.acks
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_NodeUpdate">
+            <summary>
+                Broker node update
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Ssl">
+            <summary>
+                SSL error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_WaitCoord">
+            <summary>
+                Waiting for coordinator to become available.
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_UnknownGroup">
+            <summary>
+                Unknown client group
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_InProgress">
+            <summary>
+                Operation in progress
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_PrevInProgress">
+            <summary>
+                Previous operation in progress, wait for it to finish.
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_ExistingSubscription">
+            <summary>
+                This operation would interfere with an existing subscription
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_AssignPartitions">
+            <summary>
+                Assigned partitions (rebalance_cb)
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_RevokePartitions">
+            <summary>
+                Revoked partitions (rebalance_cb)
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Conflict">
+            <summary>
+                Conflicting use
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_State">
+            <summary>
+                Wrong state
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_UnknownProtocol">
+            <summary>
+                Unknown protocol
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_NotImplemented">
+            <summary>
+                Not implemented
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Authentication">
+            <summary>
+                Authentication failure
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_NoOffset">
+            <summary>
+                No stored offset
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Outdated">
+            <summary>
+                Outdated
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_TimedOutQueue">
+            <summary>
+                Timed out in queue
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_UnsupportedFeature">
+            <summary>
+                Feature not supported by broker
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_WaitCache">
+            <summary>
+                Awaiting cache update
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Intr">
+            <summary>
+                Operation interrupted
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_KeySerialization">
+            <summary>
+                Key serialization error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_ValueSerialization">
+            <summary>
+                Value serialization error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_KeyDeserialization">
+            <summary>
+                Key deserialization error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_ValueDeserialization">
+            <summary>
+                Value deserialization error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Partial">
+            <summary>
+                Partial response
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_ReadOnly">
+            <summary>
+                Modification attempted on read-only object
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_NoEnt">
+            <summary>
+                No such entry / item not found
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_Underflow">
+            <summary>
+                Read underflow
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Local_InvalidType">
+            <summary>
+                Invalid type
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.Unknown">
+            <summary>
+                Unknown broker error
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NoError">
+            <summary>
+                Success
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.OffsetOutOfRange">
+            <summary>
+                Offset out of range
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidMsg">
+            <summary>
+                Invalid message
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.UnknownTopicOrPart">
+            <summary>
+                Unknown topic or partition
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidMsgSize">
+            <summary>
+                Invalid message size
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.LeaderNotAvailable">
+            <summary>
+                Leader not available
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NotLeaderForPartition">
+            <summary>
+                Not leader for partition
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.RequestTimedOut">
+            <summary>
+                Request timed out
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.BrokerNotAvailable">
+            <summary>
+                Broker not available
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.ReplicaNotAvailable">
+            <summary>
+                Replica not available
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.MsgSizeTooLarge">
+            <summary>
+                Message size too large
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.StaleCtrlEpoch">
+            <summary>
+                StaleControllerEpochCode
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.OffsetMetadataTooLarge">
+            <summary>
+                Offset metadata string too large
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NetworkException">
+            <summary>
+                Broker disconnected before response received
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.GroupLoadInProress">
+            <summary>
+                Group coordinator load in progress
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.GroupCoordinatorNotAvailable">
+            <summary>
+            Group coordinator not available
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NotCoordinatorForGroup">
+            <summary>
+                Not coordinator for group
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.TopicException">
+            <summary>
+                Invalid topic
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.RecordListTooLarge">
+            <summary>
+                Message batch larger than configured server segment size
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NotEnoughReplicas">
+            <summary>
+                Not enough in-sync replicas
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NotEnoughReplicasAfterAppend">
+            <summary>
+                Message(s) written to insufficient number of in-sync replicas
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidRequiredAcks">
+            <summary>
+                Invalid required acks value
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.IllegalGeneration">
+            <summary>
+                Specified group generation id is not valid
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InconsistentGroupProtocol">
+            <summary>
+                Inconsistent group protocol
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidGroupId">
+            <summary>
+                Invalid group.id
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.UnknownMemberId">
+            <summary>
+                Unknown member
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidSessionTimeout">
+            <summary>
+                Invalid session timeout
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.RebalanceInProgress">
+            <summary>
+                Group rebalance in progress
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidCommitOffsetSize">
+            <summary>
+                Commit offset data size is not valid
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.TopicAuthorizationFailed">
+            <summary>
+                Topic authorization failed
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.GroupAuthorizationFailed">
+            <summary>
+                Group authorization failed
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.ClusterAuthorizationFailed">
+            <summary>
+                Cluster authorization failed
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidTimestamp">
+            <summary>
+                Invalid timestamp
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.UnsupportedSaslMechanism">
+            <summary>
+                Unsupported SASL mechanism
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.IllegalSaslState">
+            <summary>
+                Illegal SASL state
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.UnsupportedVersion">
+            <summary>
+                Unusupported version
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.TopicAlreadyExists">
+            <summary>
+                Topic already exists
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidPartitions">
+            <summary>
+                Invalid number of partitions
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidReplicationFactor">
+            <summary>
+               Invalid replication factor
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidReplicaAssignment">
+            <summary>
+                Invalid replica assignment
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidConfig">
+            <summary>
+                Invalid config
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.NotController">
+            <summary>
+                Not controller for cluster
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidRequest">
+            <summary>
+                Invalid request
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.UnsupportedForMessageFormat">
+            <summary>
+                Message format on broker does not support request
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.PolicyViolation">
+            <summary>
+                Isolation policy volation
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.OutOfOrderSequenceNumber">
+            <summary>
+                Broker received an out of order sequence number
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.DuplicateSequenceNumber">
+            <summary>
+                Broker received a duplicate sequence number
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidProducerEpoch">
+            <summary>
+                Producer attempted an operation with an old epoch
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidTxnState">
+            <summary>
+                Producer attempted a transactional operation in an invalid state
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidProducerIdMapping">
+            <summary>
+                Producer attempted to use a producer id which is not currently assigned to its transactional id
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.InvalidTransactionTimeout">
+            <summary>
+                Transaction timeout is larger than the maximum value allowed by the broker's max.transaction.timeout.ms
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.ConcurrentTransactions">
+            <summary>
+                Producer attempted to update a transaction while another concurrent operation on the same transaction was ongoing
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.TransactionCoordinatorFenced">
+            <summary>
+                Indicates that the transaction coordinator sending a WriteTxnMarker is no longer the current coordinator for a given producer
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.TransactionalIdAuthorizationFailed">
+            <summary>
+                Transactional Id authorization failed
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.SecurityDisabled">
+            <summary>
+                Security features are disabled
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.AnalyticsPump.ErrorCode.OperationNotAttempted">
+            <summary>
+                Operation not attempted
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.AnalyticsPump.IAnalyticsPump">
+            <summary>
+            Forwards messages to the Analytics Pump (via Kafka)
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.AnalyticsPump.IAnalyticsPump.ForwardMessageToPump(System.String,System.Byte[])">
+            <summary>
+            Forwards a json message to the Analytics Pump (via Kafka)
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.AnalyticsPump.IProducerWrapper">
+            <summary>
+            Part of Analytics Pump; this should not be implemented outside of MicroService.Core
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.AnalyticsPump.IProducerWrapper.SendMessageAsync(System.String,KafkaNet.Protocol.Message[])">
+            <summary>
+            Part of Analytics Pump; this should not be implemented outside of MicroService.Core
+            </summary>
+            <param name="topic"></param>
+            <param name="messages"></param>
+        </member>
+        <member name="T:Rook.Framework.Core.Application.Bus.RabbitMqWrapperException">
+            <summary>
+            Exception from RabbitMqWrapper
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Application.MessageHandlers.CompletionAction">
+            <summary>
+            Actions to take after returning from the Handle method of a MessageHandler
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Application.MessageHandlers.CompletionAction.DoNothing">
+            <summary>
+            Do nothing after returning from the Handle method
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Application.MessageHandlers.CompletionAction.Republish">
+            <summary>
+            Republish the message after returning from the Handle method
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Application.Message.Message`2">
+            <summary>
+            A POCO representation of the JSON message
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.Uuid">
+            <summary>
+            Gets or sets the UUID for the message.
+            </summary>
+            <value>
+            The UUID.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.Source">
+            <summary>
+            Gets or sets the the service that initiated the request/message
+            </summary>
+            <value>
+            The source.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.PublishedTime">
+            <summary>
+            Gets or sets the  date/time that the message was created ( UTC ).
+            </summary>
+            <value>
+            The published time.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.LastModifiedBy">
+            <summary>
+            Gets or sets the the name of the last service to decorate this message
+            </summary>
+            <value>
+            The last modified by.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.LastModifiedTime">
+            <summary>
+            Gets or sets  the date/time that the message was last updated ( UTC )
+            </summary>
+            <value>
+            The last modified time.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.Method">
+            <summary>
+            Gets or sets a use-case oriented requirement e.g. GetByUserId
+            </summary>
+            <value>
+            The method.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.Need">
+            <summary>
+            Gets or sets the need. 
+            The data required to satisfy the request (essentially the method params)
+            </summary>
+            <value>
+            The need.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.Solution">
+            <summary>
+            Gets or sets the solution.
+            A complex domain object that satisfies the need. Many services can contribute solution items to the solution
+            </summary>
+            <value>
+            The solution.
+            </value>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message`2.Errors">
+            <summary>
+            Gets or sets the errors.
+            //An array of error message objects with source and message properties
+            </summary>
+            <value>
+            The errors.
+            </value>
+        </member>
+        <member name="M:Rook.Framework.Core.Application.Message.Message`2.ShouldSerializeErrors">
+            <summary>
+            Used to indicate to Newtonsoft whether to attempt to serialise the Errors property
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Rook.Framework.Core.Application.Message.Message2`2.Method">
+            <summary>
+            Gets or sets a use-case oriented requirement e.g. GetByUserId
+            </summary>
+            <value>
+            The method.
+            </value>
+        </member>
+        <member name="T:Rook.Framework.Core.Application.ResponseHandlers.ResponseError">
+            <summary>
+            This class represents an Error that may have occurred when processing a Message
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Application.Subscribe.MessageSubscriber">
+            <summary>
+            Automaticly subscribes to messages, by locating consumers for message types
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Attributes.CommandHandlerAttribute">
+            <summary>
+            Handler attribute which only accepts messages with solutions and without errors, and which does not automatically republish a message on completion.
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Attributes.ErrorHandlerAttribute">
+            <summary>
+            Handler attribute which only accepts messages with errors, whether or not a solution exists, and does not automatically republish the message.
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Attributes.QueryHandlerAttribute">
+            <summary>
+            Handler attribute which only accepts messages without solutions and without errors, and which automatically republishes a message on completion.
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Common.AutoDictionary`2">
+            <summary>Like a Dictionary&lt;TKey, TValue&gt;, but returns default(TValue) when the key is not present, and allows setting of the value by key even if it doesn't yet exist.</summary>
+            <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
+            <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
+        </member>
+        <member name="M:Rook.Framework.Core.Common.CacheListBase`2.SetGetterMethod(System.Func{`0,`1})">
+            <summary>
+            Updates the Getter method for undiscovered or not-yet-loaded items.
+            </summary>
+            <param name="func"></param>
+        </member>
+        <member name="P:Rook.Framework.Core.Common.ServiceInfo.Name">
+            <summary>
+            Returns the filename of the executable without its extension.
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServerAspNet.SwaggerIgnoreAttribute">
+            <summary>
+            Ignore property in request body
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServerAspNet.SwaggerIgnoreSchemaFilter">
+            <summary>
+            Applies filter to schema of the Swagger documentation request body
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServerAspNet.SwaggerTagAttribute">
+            <summary>
+            Ignore property in request body
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.EmptyHttpContent.Headers">
+            <summary>
+            No additional headers required when no content
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServer.FileHttpContent">
+            <summary>
+            Implementation of IHttpContent that allows a file to streamed from disk to the 
+            HTTP response without being entirely loaded into memory
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.FileHttpContent.Headers">
+            <summary>
+            Contains Content-Type and Content-Length HTTP response headers
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.FileHttpContent.#ctor(System.String,System.String,System.Int32)">
+            <summary>
+            Creates a new FileHttpContent object for an existing file
+            </summary>
+            <param name="filename">Name of the file to stream to the response. Can be relative or absolute path</param>
+            <param name="contentType">The string to use as the Content-Type HTTP header.  Default is application/octet-stream</param>
+            <param name="bufferSize">Buffer size in bytes to use when copying the file to the response stream. Default is 81920 (80KB)</param>
+            <exception cref="T:System.IO.FileNotFoundException">If <paramref name="filename"/> cannot be found</exception>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.FileHttpContent.WriteToStream(System.IO.Stream)">
+            <summary>
+            Copies a FileStream to the
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.IHttpRequest.OrganisationIds">
+            <summary>
+            Contains a complete list of Organisation Ids which the user is authorised to view.
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.IHttpRequest.OrganisationIdsAdministers">
+            <summary>
+            Contains a subset list of Organisation Ids which the user is authorised to administer.
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.IHttpResponse.CachingDisabled">
+            <summary>
+            Explicitly sets cache control headers (Pragma, Cache-Control, Expires) to prevent client-side caching.
+            If your implementation of IHttpResponse explicitly caches, set this to false and provide your own headers.
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.IHttpResponse.SetStringContent(System.String)">
+            <summary>
+            Sets ASCII string content from a C# string (could be unicode)
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.IHttpResponse.SetObjectContent(System.Object)">
+            <summary>
+            Sets serialised JSON string content (UTF8 encoded) from an object (could be dynamic, or a strongly typed object)
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.HttpResponse.ContentType">
+            <summary>
+            It is not necessary to set this field. Default is application/json
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.HttpResponse.SetStringContent(System.String)">
+            <summary>
+            Sets ASCII string content from a C# string (could be unicode)
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.HttpResponse.SetObjectContent(System.Object)">
+            <summary>
+            Sets serialised JSON string content (UTF8 encoded) from an object (could be dynamic, or a strongly typed object)
+            </summary>
+            <param name="content"></param>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.IActivityHandler.ExampleRequestDocument">
+            <summary>
+            Self-documenting property: An example of the document expected to be passed with the request
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.IActivityHandler.ExampleResponseDocument">
+            <summary>
+            Self-documenting property: An example of the document expected to be passed in the response
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServer.IHttpContent">
+            <summary>
+            Interface for any HTTP Response Content
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.HttpServer.IHttpContent.Headers">
+            <summary>
+            Any content related HTTP headers for the response.
+            Implementers should return an empty enumerable if no 
+            content headers are required
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.HttpServer.IHttpContent.WriteToStream(System.IO.Stream)">
+            <summary>
+            Write the content to the stream.
+            Implementers should write the content data only - not the headers.
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="T:Rook.Framework.Core.HttpServer.RequestBroker">
+            <summary>
+            Internal implementation of IRequestBroker used for only internal
+            HTTP functionality, such as the metrics endpoint.
+            
+            Does not offer full API functionality - use Rook.MicroService.Core.Api
+            for that.
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.IoC.Container">
+            <summary>
+            IoC Container
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.Scan(System.Reflection.Assembly[])">
+            <summary>
+            Scans the given assemblies to generate mappings from interfaces to concrete types, where possible. Mappings will be created for each implementation of the interface. Generated mappings can be overwritten by making subsequent calls to Map
+            </summary>
+            <param name="assemblies">The assemblies to scan</param>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.Map``1(``0)">
+            <summary>
+            Creates an internal mapping from the given interface to the given implementation. Throws an exception if the implementation does not implement the interface. <i>Mappings will be overwritten by a subsequent call to Scan</i>
+            </summary>
+            <typeparam name="TInterface">The interface</typeparam>
+            <param name="implementation">The implementation of the interface</param>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.Map``2">
+            <summary>
+            Creates an internal mapping from the given interface to the given implementation. Throws an exception if the implementation does not implement the interface. <i>Mappings will be overwritten by a subsequent call to Scan</i>
+            </summary>
+            <typeparam name="TInterface">The interface</typeparam>
+            <typeparam name="TImplementation">The implementation of the interface</typeparam>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.Map(System.Type,System.Type)">
+            <summary>
+            Creates an internal mapping from the given interface to the given implementation. Throws an exception if the implementation does not implement the interface. <i>Mappings will be overwritten by a subsequent call to Scan</i>
+            </summary>
+            <param name="interface">The interface</param>
+            <param name="implementation">The implementation of the interface</param>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetInstance``1">
+            <summary>
+            Gets a known constructed implementation for the given root key. Repeated calls to this method will return the same instance.
+            </summary>
+            <typeparam name="TRoot">The root key to be constructed (this should be an interface)</typeparam>
+            <returns>A constructed instance of the type indicated by the key</returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetInstance(System.Type)">
+            <summary>
+            Gets a known constructed implementationfor the given root key. Repeated calls to this method will return the same instance.
+            </summary>
+            <param name="root">The root key to be constructed (this should be an interface)</param>
+            <returns>A constructed instance of the type indicated by the key</returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetNewInstance``1">
+            <summary>
+            Gets a new instance for the given type T. If T is an interface, the mapped interfaces will be searched for an implementation. If T is a type, it will be constructed with all resolvable interfaces.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetNewInstance(System.Type)">
+            <summary>
+            Gets a new instance for the given root key. If the key is an interface, the mapped interfaces will be searched for an implementation. If the key is a type, it will be constructed with all resolvable interfaces.
+            </summary>
+            <param name="root">The root key (interface or class) to be constructed</param>
+            <returns>A constructed instance of the type indicated by the key</returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetAllInstances``1">
+            <summary>
+            Gets an array of known constructed implementations for T. T must be an interface.
+            Repeated calls to this method for the same T will return the same array of instances.
+            </summary>
+            <returns>An array of constructed instances of T</returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetAllInstances(System.Type)">
+            <summary>
+            Gets an array of known constructed implementations for the given root key. The key must be an interface.
+            Repeated calls to this method for a given root key will return the same array of instances.
+            </summary>
+            <param name="root">The root key (must be an interface) to be constructed</param>
+            <returns>An array of constructed instances of the type indicated by the key</returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetAllNewInstances``1">
+            <summary>
+            Gets an array of newly constructed implementations for the given T. If T is an interface, the mapped interfaces will be searched for implementations. This method does not accept a concrete type T.
+            </summary>
+            <returns>An array of newly constructed implementations of T</returns>
+        </member>
+        <member name="M:Rook.Framework.Core.IoC.Container.GetAllNewInstances(System.Type)">
+            <summary>
+            Gets an array of newly constructed implementations for the given root key. If the key is an interface, the mapped interfaces will be searched for implementations. This method does not accept a concrete type as a root key.
+            </summary>
+            <param name="root">The root key (must be an interface) to be constructed</param>
+            <returns>An array of newly constructed instances of the type indicated by the key</returns>
+        </member>
+        <member name="T:Rook.Framework.Core.Monitoring.BuildInfoLabelCollector">
+            <summary>
+            Collects build info labels from <see cref="T:Rook.Framework.Core.Monitoring.IBuildInfoLabelProvider"/> implementations
+            so they can be collated into th rook_service_build_info metric.
+            </summary>
+            <remarks>
+            Create an implementation of <see cref="T:Rook.Framework.Core.Monitoring.IBuildInfoLabelProvider"/> to specify custom
+            labels and values for the rook_service_build_info metric. If duplicates are 
+            found then <see cref="T:Rook.Framework.Core.Monitoring.BuildInfoLabelCollector"/> will use the first one it finds,
+            and will log out a warning with the duplicates.
+            
+            Note: Implementors should not create <see cref="T:Rook.Framework.Core.Monitoring.IBuildInfoLabelProvider"/>
+            implementations that result in duplicate labels.  The load order is non-deterministic
+            so implementors should not rely on <see cref="T:Rook.Framework.Core.Monitoring.BuildInfoLabelCollector"/> discarding
+            the correct metric.
+            </remarks>
+        </member>
+        <member name="T:Rook.Framework.Core.Monitoring.BuildInfoLabelProvider">
+            <summary>
+            Provides the build info labels for Rook.Framework.Core
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Monitoring.DiscardedMessageReason">
+            <summary>
+            Reasons that a message can be discarded
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.MissingMessageBody">
+            <summary>
+            The body on the message was null or contained no data
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.MethodDeserialisationError">
+            <summary>
+            The message could not be deserialised to a MethodInspector object
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.Duplicate">
+            <summary>
+            The message was determined to be a duplicate
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.NoHandler">
+            <summary>
+            There was no handler in the microservice 
+            for the Method on the message
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.MessageDeserialisationError">
+            <summary>
+            The message could not be deserialised to a Message object
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.AcceptanceBehaviourPrecondition">
+            <summary>
+            The AcceptanceBehaviour property of the message
+            handler indicated that the message was not in 
+            the correct state for processing
+            </summary>
+        </member>
+        <member name="F:Rook.Framework.Core.Monitoring.DiscardedMessageReason.MissingNeed">
+            <summary>
+            The Message had no Need
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Monitoring.IBuildInfoLabelProvider">
+            <summary>
+            Provider of build info labels for the microlise_service_build_info
+            metric.
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.Monitoring.IBuildInfoLabelProvider.GetBuildInfoLabels">
+            <summary>
+            Get a collection of build info label names and values
+            to include in the microlise_service_build_info metric
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Monitoring.IServiceMetrics">
+            <summary>
+            Exposes service metrics
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.Monitoring.IServiceMetrics.RecordDiscardedMessage(Rook.Framework.Core.Monitoring.DiscardedMessageReason)">
+            <summary>
+            Increments the discared message counter
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.Monitoring.IServiceMetrics.RecordPublishedMessage">
+            <summary>
+            Increments the published messages counter
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.Monitoring.IServiceMetrics.RecordProcessedMessage(System.String,System.Double)">
+            <summary>
+            Record processing time for the message handler
+            </summary>
+            <param name="handlerName">Name of the message handler</param>
+            <param name="elapsedMilliseconds">Processing time in milliseconds</param>
+        </member>
+        <member name="M:Rook.Framework.Core.Monitoring.IServiceMetrics.RecordNewMainChannel">
+            <summary>
+            Records a new channel being opened on the main exchange
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Monitoring.MetricsActivityHandler">
+            <summary>
+            Prometheus /metrics HTTP endpoint
+            Publishes Prometheus metrics
+            </summary>
+        </member>
+        <member name="T:Rook.Framework.Core.Services.IStartable">
+            <summary>
+            Any IStartable implementations get round up on <seealso cref="M:Rook.Framework.Core.Services.IService.Start"/> and are triggered in order of <see cref="P:Rook.Framework.Core.Services.IStartable.StartupPriority"/>
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.Services.IStartable.Start">
+            <summary>
+            What should happen when starting up
+            </summary>
+        </member>
+        <member name="P:Rook.Framework.Core.Services.IStartable.StartupPriority">
+            <summary>
+            Which order it should be ran in, lowest numbers first
+            </summary>
+        </member>
+        <member name="M:Rook.Framework.Core.Services.Service.Start">
+            <summary>
+            Initialises the service
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rook.Framework.Core.Services.Service.Stop">
+            <summary>
+            Shuts down the service
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Rook.Framework.Core.StructureMap.IContainerFacade.GetInstance``1(System.Boolean)">
+            <summary>
+            Gets instance of type T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="unique">Unique only applies to legacy container, object lifecycle is managed within registries for StructureMap</param>
+            <returns></returns>
+        </member>
+        <member name="M:Rook.Framework.Core.StructureMap.IContainerFacade.GetInstance``1(System.String)">
+            <summary>
+            Gets a named instance of type T. Only supported if using StructureMap
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="namedInstance"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Rook.Framework.Core.StructureMap.IContainerFacade.Map``1(``0)">
+            <summary>
+            This only applies to the Legacy container. Structuremap dependencies should be wired up via the registry files
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="instance"></param>
+        </member>
+    </members>
+</doc>

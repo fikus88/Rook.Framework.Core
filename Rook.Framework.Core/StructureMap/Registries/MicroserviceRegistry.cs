@@ -76,7 +76,9 @@ namespace Rook.Framework.Core.StructureMap.Registries
             do
             {
                 var assembly = assembliesToScan.Pop();
-                
+
+                var test = assembly.GetReferencedAssemblies().ToList();
+
                 var referencedAssemblies = assembly.GetReferencedAssemblies()
                     .Where(x => !x.Name.Contains("StructureMap"))
                     .Where(x => !x.Name.Contains("VisualStudio"))
