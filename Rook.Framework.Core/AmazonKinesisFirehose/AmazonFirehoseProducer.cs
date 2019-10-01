@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using KafkaNet.Common;
 using KinesisProducerNet;
+using KinesisProducerNet.Protobuf;
 using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.AmazonKinesisFirehose
@@ -10,15 +11,19 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 	{
 
 		private readonly KinesisProducer _kinesisProducer;
-
-		public AmazonFirehoseProducer()
+		private readonly ILogger _logger;
+		
+		public AmazonFirehoseProducer( ILogger logger)
 		{
 			
 			var conf = new KinesisProducerConfiguration()
 			{
-				Region = Environment.GetEnvironmentVariable("AWS_REGION")
+				Region = Environment.GetEnvironmentVariable("AWS_REGION"),
+				LogLevel = "error",
 			};
 
+			_logger = logger;
+			
 			_kinesisProducer = new KinesisProducer(conf);
 			
 		}
@@ -28,6 +33,8 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 			var rec = new UserRecord(streamName, ServiceInfo.Name,
 				json.ToBytes());
 
+			_logger.Info("FIREHOSE", new LogItem("Data Pushed", json));
+			
 			_kinesisProducer.AddUserRecord(rec);
 		}
 	}
