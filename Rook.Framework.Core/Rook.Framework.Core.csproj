@@ -8,7 +8,7 @@
     <Configurations>Debug;Release;Experimental</Configurations>
     <Platforms>AnyCPU</Platforms>
     <LangVersion>7.3</LangVersion>
-    <PackageVersion>2019.10.1.62</PackageVersion>
+    <PackageVersion>2019.10.3.63</PackageVersion>
     <Title>Rook.Framework.Core</Title>
     <PackageLicenseUrl>https://github.com/rookframework/Rook.Framework.Core/blob/master/LICENSE     </PackageLicenseUrl>
     <RepositoryUrl>https://github.com/rookframework/Rook.Framework.Core</RepositoryUrl>
@@ -18,9 +18,9 @@
     <PackageProjectUrl>https://github.com/rookframework/Rook.Documentation</PackageProjectUrl>
     <PackageIconUrl>https://github.com/rookframework/Rook.Documentation/blob/master/rook.png?raw=true</PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2019.10.1.62</AssemblyVersion>
-    <Version>2019.10.1.62</Version>
-    <FileVersion>2019.10.1.62</FileVersion>
+    <AssemblyVersion>2019.10.3.63</AssemblyVersion>
+    <Version>2019.10.3.63</Version>
+    <FileVersion>2019.10.3.63</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>Rook.Framework.Core.xml</DocumentationFile>

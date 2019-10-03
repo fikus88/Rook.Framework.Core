@@ -36,13 +36,12 @@ namespace Rook.Framework.Core.Application.Bus
 			ILogger logger,
 			IConfigurationManager configurationManager,
 			IRabbitMqConnectionManager connectionManager,
-			IServiceMetrics serviceMetrics,
-			IAmazonFirehoseProducer amazonFirehoseProducer)
+			IServiceMetrics serviceMetrics)
 		{
 			Logger = logger;
 			_dateTimeProvider = dateTimeProvider;
 			_serviceMetrics = serviceMetrics;
-			_amazonFirehoseProducer = amazonFirehoseProducer;
+			
 			QueueName = ServiceInfo.QueueName;
 
 			// AutoAck is the opposite of AcknowledgeAfterProcessing
@@ -54,7 +53,11 @@ namespace Rook.Framework.Core.Application.Bus
 			_durable = configurationManager.Get<bool>("QueueIsDurable", true);
 
 			_amazonKinesisStreamName = configurationManager.Get<string>("MessageKinesisStream");
-
+			
+			if (!string.IsNullOrEmpty(_amazonKinesisStreamName))
+				_amazonFirehoseProducer = new AmazonFirehoseProducer(logger);
+			
+			
 			_maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
 
 			_channelCache = new ChannelCache(connectionManager, Logger, QueueConstants.ExchangeName, ExchangeType.Topic,
@@ -178,7 +181,8 @@ namespace Rook.Framework.Core.Application.Bus
 
 			IModel model = _channelCache.GetNextAvailableChannel();
 
-			_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage);
+			if (!string.IsNullOrWhiteSpace(_amazonKinesisStreamName))
+				_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage);
 
 			model.BasicPublish(QueueConstants.ExchangeName, SelectedRoutingKey, true, null,
 				Encoding.UTF8.GetBytes(serializedMessage));
