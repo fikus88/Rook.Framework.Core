@@ -15,6 +15,14 @@ namespace Rook.Framework.Core.Utils
 
         public void Add(KeyValuePair<string, string> item) => Add(item.Key,item.Value);
 
+        public void AddRange(IEnumerable<KeyValuePair<string, string>> items)
+        {
+            foreach (var item in items)
+            {
+                Add(item);
+            }
+        }
+
         public void Clear() => inner.Clear();
 
         public bool Contains(KeyValuePair<string, string> item) => inner.ContainsKey(item.Key.ToLower());
