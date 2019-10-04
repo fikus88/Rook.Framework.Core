@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Rook.Framework.Core.AmazonKinesisFirehose;
 using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Application.Message;
 using Rook.Framework.Core.Common;
@@ -17,7 +18,7 @@ namespace Rook.Framework.Core.Tests.Unit
 	public class RabbitMqWrapperTests
 	{
         private readonly IServiceMetrics _metrics = Mock.Of<IServiceMetrics>();
-        
+        private readonly Mock<IAmazonFirehoseProducer> _amazonKinesisFirehose = new Mock<IAmazonFirehoseProducer>();
 		[TestMethod]
 		[ExpectedException(typeof(RabbitMqWrapperException))]
 		public void Start_WhenCalledWithoutQueueUri_RaisesException()
@@ -32,7 +33,7 @@ namespace Rook.Framework.Core.Tests.Unit
 		    connectionFactory.Setup(x => x.CreateConnection()).Returns(connection.Object);
 
 		    var rabbitMqConnectionManager = new RabbitMqConnectionManager(connectionFactory.Object, configurationManager.Object);
-            
+			
             var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, rabbitMqConnectionManager, _metrics);
 
 			rabbitMqWrapper.Start();

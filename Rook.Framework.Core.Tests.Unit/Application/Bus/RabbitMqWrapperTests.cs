@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RabbitMQ.Client;
+using Rook.Framework.Core.AmazonKinesisFirehose;
 using Rook.Framework.Core.Application.Bus;
 using Rook.Framework.Core.Application.Message;
 using Rook.Framework.Core.Common;
