@@ -52,7 +52,17 @@ namespace Rook.Framework.Core.Application.Bus
 
 			_durable = configurationManager.Get<bool>("QueueIsDurable", true);
 
-			_amazonKinesisStreamName = configurationManager.Get<string>("MessageKinesisStream");
+
+			try
+			{
+				_amazonKinesisStreamName = configurationManager.Get<string>("MessageKinesisStream");
+			}
+			catch
+			{
+				_amazonKinesisStreamName = null;
+			}
+
+		
 
 			if (!string.IsNullOrEmpty(_amazonKinesisStreamName))
 				_amazonFirehoseProducer = new AmazonFirehoseProducer(logger);
