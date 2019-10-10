@@ -8,7 +8,6 @@
     <Configurations>Debug;Release;Experimental</Configurations>
     <Platforms>AnyCPU</Platforms>
     <LangVersion>7.3</LangVersion>
-    <PackageVersion>1.0.0</PackageVersion>
     <Title>Rook.Framework.Core</Title>
     <PackageLicenseUrl>https://github.com/rookframework/Rook.Framework.Core/blob/master/LICENSE     </PackageLicenseUrl>
     <RepositoryUrl>https://github.com/rookframework/Rook.Framework.Core</RepositoryUrl>
