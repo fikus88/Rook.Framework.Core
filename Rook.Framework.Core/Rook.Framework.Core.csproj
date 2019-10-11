@@ -17,9 +17,9 @@
     <PackageProjectUrl>https://github.com/rookframework/Rook.Documentation</PackageProjectUrl>
     <PackageIconUrl>https://github.com/rookframework/Rook.Documentation/blob/master/rook.png?raw=true</PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2019.10.1.62</AssemblyVersion>
-    <Version>2019.10.1.62</Version>
-    <FileVersion>2019.10.1.62</FileVersion>
+    <AssemblyVersion>2019.10.9.66</AssemblyVersion>
+    <Version>2019.10.3.63</Version>
+    <FileVersion>2019.10.9.66</FileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DocumentationFile>Rook.Framework.Core.xml</DocumentationFile>

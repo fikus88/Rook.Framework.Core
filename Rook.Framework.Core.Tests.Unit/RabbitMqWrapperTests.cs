@@ -34,7 +34,7 @@ namespace Rook.Framework.Core.Tests.Unit
 
 		    var rabbitMqConnectionManager = new RabbitMqConnectionManager(connectionFactory.Object, configurationManager.Object);
 			
-            var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, rabbitMqConnectionManager, _metrics, _amazonKinesisFirehose.Object);
+            var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, rabbitMqConnectionManager, _metrics);
 
 			rabbitMqWrapper.Start();
 		}
@@ -53,7 +53,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 
@@ -74,7 +74,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connection = new Mock<IConnection>();
 			connection.Setup(x => x.CreateModel()).Returns(model.Object);
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
-            var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+            var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Stop();
 
@@ -99,7 +99,7 @@ namespace Rook.Framework.Core.Tests.Unit
 
 		    var mqConnectionManager = new RabbitMqConnectionManager(connectionFactory.Object, configurationManager.Object);
 		    
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, mqConnectionManager, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, mqConnectionManager, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.Stop();
@@ -121,7 +121,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.Stop();
@@ -146,7 +146,7 @@ namespace Rook.Framework.Core.Tests.Unit
 
 		    var rabbitMqConnectionManager = new RabbitMqConnectionManager(connectionFactory.Object, configurationManager.Object);
 
-		    var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, rabbitMqConnectionManager, _metrics, _amazonKinesisFirehose.Object);
+		    var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, rabbitMqConnectionManager, _metrics);
 
             rabbitMqWrapper.Start();
 			rabbitMqWrapper.Stop();
@@ -168,7 +168,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.DeleteQueue();			
 		}
@@ -187,7 +187,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
 			connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.DeleteQueue();
@@ -209,7 +209,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.PurgeQueue();
 		}
@@ -227,7 +227,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.PurgeQueue();
@@ -250,7 +250,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 			rabbitMqWrapper.StartMessageConsumer(new Mock<AsyncEventHandler<BasicDeliverEventArgs>>().Object);
 		}
 
@@ -268,7 +268,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.StartMessageConsumer(new Mock<AsyncEventHandler<BasicDeliverEventArgs>>().Object);
@@ -294,7 +294,7 @@ namespace Rook.Framework.Core.Tests.Unit
 	        var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-	        var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+	        var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 	        rabbitMqWrapper.StopMessageConsumer("TestConsumerTag");
 
@@ -317,7 +317,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.StopMessageConsumer(null);
@@ -340,7 +340,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			rabbitMqWrapper.Start();
 			rabbitMqWrapper.StopMessageConsumer("TestConsumerTag");
@@ -365,7 +365,7 @@ namespace Rook.Framework.Core.Tests.Unit
 			var connectionManager = new Mock<IRabbitMqConnectionManager>();
             connectionManager.Setup(x => x.Connection).Returns(connection.Object);
 
-			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+			var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
 			var parameters = new Message<object, object> {
 				Uuid = Guid.NewGuid(),
@@ -398,7 +398,7 @@ namespace Rook.Framework.Core.Tests.Unit
 
             var queueName = "Test";
 
-            IQueueWrapper rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+            IQueueWrapper rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
 
             rabbitMqWrapper.Start();
 
@@ -417,7 +417,7 @@ namespace Rook.Framework.Core.Tests.Unit
 
             var connectionManager = new Mock<IRabbitMqConnectionManager>();
             
-            var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics, _amazonKinesisFirehose.Object);
+            var rabbitMqWrapper = new RabbitMqWrapper(dateTimeProvider.Object, logger.Object, configurationManager.Object, connectionManager.Object, _metrics);
             var queueName = "Test";
 
             uint result = rabbitMqWrapper.MessageCount(queueName);

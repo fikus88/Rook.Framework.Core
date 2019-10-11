@@ -78,8 +78,7 @@ namespace Rook.Framework.Core.Tests.Unit.Application.Bus
                 _mockLogger.Object,
                 _mockConfigurationManager.Object,
                 _mockConnectionFactory.Object,
-                _mockServiceMetrics.Object,
-                new Mock<IAmazonFirehoseProducer>().Object);
+                _mockServiceMetrics.Object);
         }
     }
 }
