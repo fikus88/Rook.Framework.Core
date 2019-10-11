@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using Amazon.Runtime;
 using KafkaNet.Common;
 using KinesisProducerNet;
 using KinesisProducerNet.Protobuf;
@@ -20,6 +21,7 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 			{
 				Region = Environment.GetEnvironmentVariable("AWS_REGION"),
 				LogLevel = "error",
+				CredentialsProvider =  new InstanceProfileAWSCredentials()
 			};
 
 			_logger = logger;
