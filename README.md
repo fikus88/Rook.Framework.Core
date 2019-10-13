@@ -6,13 +6,17 @@ Common Rook microservice functionality
 
 
 ## Installation
+PM> Install-Package Rook.Framework.Core
 
 ## Usage
 See Rook documentation for useage instructions
 https://github.com/rookframework/Rook.Documentation/wiki/Rook-Microservice-Project
 
 ## Contributing
+Pull requests welcome
 
 ## Credits
+https://github.com/orgs/rookframework/teams/rook-contributors
 
 ## License
+https://github.com/rookframework/Rook.Framework.Core/blob/master/LICENSE
