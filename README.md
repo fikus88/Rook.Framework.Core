@@ -9,6 +9,7 @@ Common Rook microservice functionality
 
 ## Usage
 See Rook documentation for useage instructions
+https://github.com/rookframework/Rook.Documentation/wiki/Rook-Microservice-Project
 
 ## Contributing
 
