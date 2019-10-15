@@ -5,6 +5,7 @@ using Amazon.Runtime.CredentialManagement;
 using KafkaNet.Common;
 using KinesisProducerNet;
 using KinesisProducerNet.Protobuf;
+using Newtonsoft.Json;
 using Rook.Framework.Core.Common;
 
 namespace Rook.Framework.Core.AmazonKinesisFirehose
@@ -16,18 +17,18 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 
 		public AmazonFirehoseProducer(ILogger logger)
 		{
-			new CredentialProfileStoreChain().TryGetAWSCredentials(Environment.GetEnvironmentVariable("AWS_PROFILE"),
-				out var creds);
+			
 			var conf = new KinesisProducerConfiguration()
 			{
 				Region = Environment.GetEnvironmentVariable("AWS_REGION"),
-				LogLevel = "error",
-				CredentialsProvider = creds
+				LogLevel = "error"
 			};
 
 			_logger = logger;
 
 			_kinesisProducer = new KinesisProducer(conf);
+			
+			_logger.Info($"{JsonConvert.SerializeObject(conf.CredentialsProvider.GetCredentials())}");
 		}
 
 		public void PutRecord(string streamName, string json)
