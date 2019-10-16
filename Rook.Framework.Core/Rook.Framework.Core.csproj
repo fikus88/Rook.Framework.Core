@@ -41,7 +41,7 @@
     <PackageReference Include="AWSSDK.KinesisFirehose" Version="3.3.100.72" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
     <PackageReference Include="kafka-core" Version="0.9.1" />
-    <PackageReference Include="KinesisProducerNet" Version="2019.10.15.9" />
+    <PackageReference Include="KinesisProducerNet" Version="2019.10.16.10" />
     <PackageReference Include="KinesisProducerNet.Linux" Version="0.12.8" />
     <PackageReference Include="KinesisProducerNet.Windows" Version="0.12.8" />
     <PackageReference Include="MAB.HybridModelBinding" Version="0.15.1" />

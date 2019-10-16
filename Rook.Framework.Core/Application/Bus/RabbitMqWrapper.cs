@@ -65,7 +65,7 @@ namespace Rook.Framework.Core.Application.Bus
 		
 
 			if (!string.IsNullOrEmpty(_amazonKinesisStreamName))
-				_amazonFirehoseProducer = new AmazonFirehoseProducer(logger);
+				_amazonFirehoseProducer = new AmazonFirehoseProducer(logger, configurationManager);
 
 			_maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
 
