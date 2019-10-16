@@ -7,6 +7,7 @@ using KinesisProducerNet;
 using KinesisProducerNet.Protobuf;
 using Newtonsoft.Json;
 using Rook.Framework.Core.Common;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace Rook.Framework.Core.AmazonKinesisFirehose
 {
@@ -15,19 +16,29 @@ namespace Rook.Framework.Core.AmazonKinesisFirehose
 		private readonly KinesisProducer _kinesisProducer;
 		private readonly ILogger _logger;
 
-		public AmazonFirehoseProducer(ILogger logger)
+		public AmazonFirehoseProducer(ILogger logger, IConfigurationManager config)
 		{
-			
+			LogLevel kinesisLogLevel;
+
+			try
+			{
+				kinesisLogLevel = (LogLevel) Enum.Parse(typeof(LogLevel), config.Get<string>("KinesisLogLevel"));
+			}
+			catch
+			{
+				kinesisLogLevel = LogLevel.Information;
+			}
+
 			var conf = new KinesisProducerConfiguration()
 			{
 				Region = Environment.GetEnvironmentVariable("AWS_REGION"),
-				LogLevel = "error"
+				LogLevel = kinesisLogLevel
 			};
 
 			_logger = logger;
 
 			_kinesisProducer = new KinesisProducer(conf);
-			
+
 			_logger.Info($"{JsonConvert.SerializeObject(conf.CredentialsProvider.GetCredentials())}");
 		}
 
