@@ -103,12 +103,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Header Output Complete"));
 			});
 
-			//app.UseSwagger();
-			//app.UseSwaggerUI(c =>
-			//{
-			//	c.RoutePrefix = "";
-			//	c.SwaggerEndpoint("/swagger/v1/swagger.json", _entryAssemblyName.Version.ToString());
-			//});
+			app.UseSwagger();
+			app.UseSwaggerUI(c =>
+			{
+				c.RoutePrefix = "";
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", _entryAssemblyName.Version.ToString());
+			});
 			app.UseAuthentication();
 			app.UseMvc();
 		}
