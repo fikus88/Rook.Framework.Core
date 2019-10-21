@@ -54,6 +54,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			}
 			else
 			{
+				app.UseMiddleware<ExceptionHandlingMiddleware>();
 				app.UseHsts();
 			}
 
@@ -89,7 +90,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Pipeline Begin"));
 
 				await next.Invoke();
-
+				
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Pipeline Complete"));
 
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Outputting Response Headers"));
@@ -102,12 +103,12 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Header Output Complete"));
 			});
 
-			app.UseSwagger();
-			app.UseSwaggerUI(c =>
-			{
-				c.RoutePrefix = "";
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", _entryAssemblyName.Version.ToString());
-			});
+			//app.UseSwagger();
+			//app.UseSwaggerUI(c =>
+			//{
+			//	c.RoutePrefix = "";
+			//	c.SwaggerEndpoint("/swagger/v1/swagger.json", _entryAssemblyName.Version.ToString());
+			//});
 			app.UseAuthentication();
 			app.UseMvc();
 		}

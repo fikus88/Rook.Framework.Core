@@ -1,11 +1,12 @@
 {
-	"QueueUri": "amqp://guest:guest@queue:5672",
-	"LogLevel": "Info",
-	"UseStructureMap": true,
-	"Port": 8500,
-	"EnableSubdomainCorsPolicy": true,
-	"HttpServerType": "AspNetHttp",
-	"AllowedSubdomainCorsPolicyOrigins": "http://*.*.mab-development.co.uk:4200",
-	"MessageKinesisStream": "MAB.Dev.Platform.MessageKinesisStream",
-	"RepositoryKinesisStream" : "MAB.Dev.Platform.RepositoryKinesisStream"
+  "QueueUri": "amqp://guest:guest@queue:5672",
+  "LogLevel": "Info",
+  "UseStructureMap": true,
+  "Port": 8500,
+  "EnableSubdomainCorsPolicy": true,
+  "HttpServerType": "AspNetHttp",
+  "AllowedSubdomainCorsPolicyOrigins": "http://*.*.mab-development.co.uk:4200",
+  "MessageKinesisStream": "MAB.Dev.Platform.MessageKinesisStream",
+  "RepositoryKinesisStream": "MAB.Dev.Platform.RepositoryKinesisStream",
+  "KinesisLogLevel": "Error"
 }
