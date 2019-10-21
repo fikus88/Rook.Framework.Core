@@ -54,6 +54,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 			}
 			else
 			{
+				app.UseMiddleware<ExceptionHandlingMiddleware>();
 				app.UseHsts();
 			}
 
@@ -89,7 +90,7 @@ namespace Rook.Framework.Core.HttpServerAspNet
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Pipeline Begin"));
 
 				await next.Invoke();
-
+				
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Pipeline Complete"));
 
 				_logger.Trace(typeof(Startup) + ".Configure()", new LogItem("Action", "Middleware Outputting Response Headers"));
