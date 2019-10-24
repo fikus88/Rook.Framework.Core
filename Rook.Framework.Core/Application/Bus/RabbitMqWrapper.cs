@@ -23,8 +23,7 @@ namespace Rook.Framework.Core.Application.Bus
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly IServiceMetrics _serviceMetrics;
 		private readonly ushort _maximumConcurrency;
-		private readonly IAmazonFirehoseProducer _amazonFirehoseProducer;
-		private readonly string _amazonKinesisStreamName;
+
 
 		private string SelectedRoutingKey { get; set; }
 		internal IModel Model { get; set; }
@@ -51,21 +50,7 @@ namespace Rook.Framework.Core.Application.Bus
 			_autoAck = !configurationManager.Get<bool>("AcknowledgeAfterProcessing", true);
 
 			_durable = configurationManager.Get<bool>("QueueIsDurable", true);
-
-
-			try
-			{
-				_amazonKinesisStreamName = configurationManager.Get<string>("MessageKinesisStream");
-			}
-			catch
-			{
-				_amazonKinesisStreamName = null;
-			}
-
-		
-
-			if (!string.IsNullOrEmpty(_amazonKinesisStreamName))
-				_amazonFirehoseProducer = new AmazonFirehoseProducer(logger);
+			
 
 			_maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
 
@@ -192,9 +177,7 @@ namespace Rook.Framework.Core.Application.Bus
 
 			model.BasicPublish(QueueConstants.ExchangeName, SelectedRoutingKey, true, null,
 				Encoding.UTF8.GetBytes(serializedMessage));
-
-			if (!string.IsNullOrWhiteSpace(_amazonKinesisStreamName))
-				_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage);
+			
 
 			_channelCache.ReleaseChannel(model);
 
