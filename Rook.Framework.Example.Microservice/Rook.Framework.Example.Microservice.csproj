@@ -24,8 +24,8 @@
     <ProjectReference Include="..\Rook.Framework.Core\Rook.Framework.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Rook.Framework.MongoDb, Version=2019.10.15.13, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\Rook.Framework.MongoDb\Rook.Framework.MongoDb\bin\Debug\netcoreapp2.0\Rook.Framework.MongoDb.dll</HintPath>
+    <Reference Include="Rook.Framework.MongoDb, Version=2019.10.16.14, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\rook.framework.mongodb\Rook.Framework.MongoDb\bin\Debug\netcoreapp2.0\Rook.Framework.MongoDb.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

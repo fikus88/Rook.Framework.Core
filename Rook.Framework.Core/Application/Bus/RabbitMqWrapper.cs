@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RabbitMQ.Client;
@@ -8,6 +9,7 @@ using RabbitMQ.Client.Events;
 using Rook.Framework.Core.AmazonKinesisFirehose;
 using Rook.Framework.Core.Application.Message;
 using Rook.Framework.Core.Common;
+using Rook.Framework.Core.LambdaDataPump;
 using Rook.Framework.Core.Monitoring;
 using Rook.Framework.Core.Services;
 
@@ -25,6 +27,8 @@ namespace Rook.Framework.Core.Application.Bus
 		private readonly ushort _maximumConcurrency;
 		private readonly IAmazonFirehoseProducer _amazonFirehoseProducer;
 		private readonly string _amazonKinesisStreamName;
+		private readonly ILambdaDataPump _lambdaDataPump;
+		private readonly string _dataPumpLambdaName;
 
 		private string SelectedRoutingKey { get; set; }
 		internal IModel Model { get; set; }
@@ -62,11 +66,24 @@ namespace Rook.Framework.Core.Application.Bus
 				_amazonKinesisStreamName = null;
 			}
 
+
+			try
+			{
+				_dataPumpLambdaName = configurationManager.Get<string>("DataPumpLambdaName");
+			}
+			catch
+			{
+				_dataPumpLambdaName = null;
+			}
 		
 
 			if (!string.IsNullOrEmpty(_amazonKinesisStreamName))
 				_amazonFirehoseProducer = new AmazonFirehoseProducer(logger, configurationManager);
-
+			
+			if (!string.IsNullOrEmpty(_dataPumpLambdaName))
+				_lambdaDataPump = new LambdaDataPump.LambdaDataPump(logger, _dataPumpLambdaName);
+			
+			
 			_maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
 
 			_channelCache = new ChannelCache(connectionManager, Logger, QueueConstants.ExchangeName, ExchangeType.Topic,
@@ -195,6 +212,9 @@ namespace Rook.Framework.Core.Application.Bus
 
 			if (!string.IsNullOrWhiteSpace(_amazonKinesisStreamName))
 				_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage);
+
+			if (!string.IsNullOrEmpty(_dataPumpLambdaName))
+				Task.Run(() => _lambdaDataPump.InvokeLambdaAsync(serializedMessage)).ConfigureAwait(false);
 
 			_channelCache.ReleaseChannel(model);
 

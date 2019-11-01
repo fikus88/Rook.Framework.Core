@@ -5,7 +5,5 @@
   "LogLevel": "Trace",
   "Port": 6969,
   "UseStructureMap": true,
-  "MessageKinesisStream": "MAB.Dev.Platform.MessageKinesisStream",
-  "RepositoryKinesisStream" : "MAB.Dev.Platform.RepositoryKinesisStream",
-  "KinesisLogLevel" : "Error"
+  "DataPumpLambdaName" : "FormatLambdaOutput"
 }
