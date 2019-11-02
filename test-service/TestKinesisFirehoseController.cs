@@ -29,14 +29,14 @@ public class TestKinesisFirehoseController : ControllerBase
 	/// <response code="201">A string representation of the Health Status of the application</response>
 	/// <response code="400">If a bad request is sent to the method</response>
 	[HttpPost]
-	[SwaggerTag("Kinesis Firehose")]
+	[SwaggerTag("Mongo Test")]
 	public string Post(FirehoseDataSampleNeed req)
 	{
 		
-		var msg =_requestStore.PublishAndWaitForTypedResponse(new Message<FirehoseDataSampleNeed, bool>()
+		var msg =_requestStore.PublishAndWaitForTypedResponse(new Message<int, long>()
 		{
-			Need = req,
-			Method = "FirehoseKinesisTest"
+			Need = 1,
+			Method = "MongoTest"
 		});
 		
 		
