@@ -42,7 +42,6 @@
     <PackageReference Include="AWSSDK.Lambda" Version="3.3.103.24" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.4.0" />
     <PackageReference Include="kafka-core" Version="0.9.1" />
-    <PackageReference Include="KinesisProducerNet" Version="2019.10.16.10" />
     <PackageReference Include="KinesisProducerNet.Linux" Version="0.12.8" />
     <PackageReference Include="KinesisProducerNet.Windows" Version="0.12.8" />
     <PackageReference Include="MAB.HybridModelBinding" Version="0.15.1" />
@@ -58,6 +57,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="prometheus-net" Version="2.1.3" />
     <PackageReference Include="RabbitMQ.Client" Version="5.1.0" />
+    <PackageReference Include="Rook.Framework.KinesisProducerNet" Version="2019.10.15.9" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc2" />
