@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Rook.Framework.Core.Common;
+using Rook.Framework.Core.HttpServerAspNet.ModelBinding;
 using StructureMap;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

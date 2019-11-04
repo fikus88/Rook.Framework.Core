@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/rookframework/Rook.Framework.Core</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageId>MAB.Rook.Framework.Core</PackageId>
+		<PackageId>Rook.Framework.Core</PackageId>
     <PackageProjectUrl>https://github.com/rookframework/Rook.Documentation</PackageProjectUrl>
     <PackageIconUrl>https://github.com/rookframework/Rook.Documentation/blob/master/rook.png?raw=true</PackageIconUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -45,7 +45,6 @@
     <PackageReference Include="KinesisProducerNet" Version="2019.10.16.10" />
     <PackageReference Include="KinesisProducerNet.Linux" Version="0.12.8" />
     <PackageReference Include="KinesisProducerNet.Windows" Version="0.12.8" />
-    <PackageReference Include="MAB.HybridModelBinding" Version="0.15.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
