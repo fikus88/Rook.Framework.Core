@@ -30,6 +30,7 @@ namespace Rook.Framework.Core.Application.Bus
 		private readonly ILambdaDataPump _lambdaDataPump;
 		private readonly string _dataPumpLambdaName;
 
+
 		private string SelectedRoutingKey { get; set; }
 		internal IModel Model { get; set; }
 
@@ -55,6 +56,7 @@ namespace Rook.Framework.Core.Application.Bus
 			_autoAck = !configurationManager.Get<bool>("AcknowledgeAfterProcessing", true);
 
 			_durable = configurationManager.Get<bool>("QueueIsDurable", true);
+
 
 
 			try
@@ -83,7 +85,7 @@ namespace Rook.Framework.Core.Application.Bus
 			if (!string.IsNullOrEmpty(_dataPumpLambdaName))
 				_lambdaDataPump = new LambdaDataPump.LambdaDataPump(logger, _dataPumpLambdaName);
 			
-			
+
 			_maximumConcurrency = configurationManager.Get<ushort>("MaximumConcurrency", 0);
 
 			_channelCache = new ChannelCache(connectionManager, Logger, QueueConstants.ExchangeName, ExchangeType.Topic,
@@ -209,9 +211,7 @@ namespace Rook.Framework.Core.Application.Bus
 
 			model.BasicPublish(QueueConstants.ExchangeName, SelectedRoutingKey, true, null,
 				Encoding.UTF8.GetBytes(serializedMessage));
-
-			if (!string.IsNullOrWhiteSpace(_amazonKinesisStreamName))
-				_amazonFirehoseProducer.PutRecord(_amazonKinesisStreamName, serializedMessage);
+			
 
 			if (!string.IsNullOrEmpty(_dataPumpLambdaName))
 				Task.Run(() => _lambdaDataPump.InvokeLambdaAsync(serializedMessage)).ConfigureAwait(false);

@@ -2,5 +2,7 @@
   "QueueUri": "amqp://guest:guest@localhost:5672",
   "MongoDatabaseUri": "mongodb://localhost:27017",
   "MongoDatabaseName": "unittests",
-  "LogLevel": "Trace"
+  "LogLevel": "Trace",
+  "MessageKinesisStream": "MAB.Dev.Platform.MessageKinesisStream",
+  "RepositoryKinesisStream" : "MAB.Dev.Platform.RepositoryKinesisStream"
 }

@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rook.Framework.Core", "Rook.Framework.Core\Rook.Framework.Core.csproj", "{375F00CC-F82B-4C6B-9814-D122FCFA458F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rook.Framework.Example.Microservice", "Rook.Framework.Example.Microservice\Rook.Framework.Example.Microservice.csproj", "{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rook.Framework.Core.Tests.Unit", "Rook.Framework.Core.Tests.Unit\Rook.Framework.Core.Tests.Unit.csproj", "{AD9C5173-6181-4BC9-AF5A-0944275903DF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{A224992A-7B24-4C21-A3E5-7A2F19962EA1}"
@@ -37,12 +35,6 @@ Global
 		{375F00CC-F82B-4C6B-9814-D122FCFA458F}.Experimental|Any CPU.Build.0 = Experimental|Any CPU
 		{375F00CC-F82B-4C6B-9814-D122FCFA458F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{375F00CC-F82B-4C6B-9814-D122FCFA458F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}.Experimental|Any CPU.ActiveCfg = Experimental|Any CPU
-		{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}.Experimental|Any CPU.Build.0 = Experimental|Any CPU
-		{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C60B561-7816-4DC9-A7FC-3DDEE99912D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD9C5173-6181-4BC9-AF5A-0944275903DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD9C5173-6181-4BC9-AF5A-0944275903DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD9C5173-6181-4BC9-AF5A-0944275903DF}.Experimental|Any CPU.ActiveCfg = Experimental|Any CPU
